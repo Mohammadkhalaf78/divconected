@@ -5,20 +5,24 @@ class AuthState extends Equatable {
     this.currentUser,
     this.loginMessage = '',
     this.forgotPasswordMessage = '',
+    this.signinWithGoogleMessage = '',
     this.registerMessage = '',
     this.logInState = RequestState.inital,
     this.registerState = RequestState.inital,
     this.forgotPasswordState = RequestState.inital,
+    this.signInWithGoogleState = RequestState.inital,
   });
 
   AuthState copyWith({
-    AuthUser? currentUser,
+    UserEntity? currentUser,
     String? loginMessage,
     String? forgotPasswordMessage,
+    String? signinWithGoogleMessage,
     String? registerMessage,
     RequestState? logInState,
     RequestState? registerState,
     RequestState? forgotPasswordState,
+    RequestState? signInWithGoogleState,
   }) {
     return AuthState(
       currentUser: currentUser ?? this.currentUser,
@@ -29,19 +33,23 @@ class AuthState extends Equatable {
       registerState: registerState ?? this.registerState,
       forgotPasswordState: forgotPasswordState ?? this.forgotPasswordState,
       registerMessage: registerMessage ?? this.registerMessage,
+      signinWithGoogleMessage: signinWithGoogleMessage ?? this.signinWithGoogleMessage,
+      signInWithGoogleState: signInWithGoogleState ?? this.signInWithGoogleState,
     );
   }
 
   // if data is success
-  final AuthUser? currentUser;
+  final UserEntity? currentUser;
   // if there any message error
   final String loginMessage;
   final String forgotPasswordMessage;
   final String registerMessage;
+  final String signinWithGoogleMessage;
   // what state is loading or loadad or error
   final RequestState logInState;
   final RequestState registerState;
   final RequestState forgotPasswordState;
+  final RequestState signInWithGoogleState;
 
   @override
   List<Object?> get props => [
@@ -52,6 +60,8 @@ class AuthState extends Equatable {
     forgotPasswordState,
     forgotPasswordMessage,
     registerMessage,
+    signinWithGoogleMessage,
+    signInWithGoogleState,
   ];
 }
 

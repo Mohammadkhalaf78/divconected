@@ -1,16 +1,17 @@
 
+
 class RegisterParams {
   final String email;
   final String password;
-  // final String username;
-  // final String fullName;
-  // final UserRole role;
+  final String fullName;
+  final String phone;
+  final String createdAt;
 
   RegisterParams({
-    // required this.fullName,
-    // required this.role,
     required this.email,
     required this.password,
-    // required this.username,
+    required this.fullName,
+    required this.phone,
+    required this.createdAt ,
   });
 }

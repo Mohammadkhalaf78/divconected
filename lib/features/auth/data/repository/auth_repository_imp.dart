@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dev_connected/core/network/exceptions.dart';
 import 'package:dev_connected/core/network/failures.dart';
 import 'package:dev_connected/features/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:dev_connected/features/auth/domain/entites/user.dart';
+import 'package:dev_connected/features/auth/domain/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/repository/base_auth_repository.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/forgot_password_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/login_params.dart';
@@ -14,7 +14,7 @@ class AuthRepositoryImp implements BaseAuthRepository {
   AuthRepositoryImp({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, AuthUser>> forgetPassword(String email)async {
+  Future<Either<Failure, UserEntity>> forgetPassword(String email)async {
     try {
       final result = await remoteDataSource.forgotPassword(ForgotPasswordParams(email: email));
       return Right(result);
@@ -24,7 +24,7 @@ class AuthRepositoryImp implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthUser>> register(RegisterParams params) async {
+  Future<Either<Failure, UserEntity>> register(RegisterParams params) async {
     try {
       final result = await remoteDataSource.register(params);
       return Right(result);
@@ -34,7 +34,7 @@ class AuthRepositoryImp implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthUser>> signIn(LoginParams params) async {
+  Future<Either<Failure, UserEntity>> signIn(LoginParams params) async {
     try {
       final result = await remoteDataSource.signIn(params);
       return Right(result);
@@ -51,5 +51,15 @@ class AuthRepositoryImp implements BaseAuthRepository {
   @override
   Future<void> verifyEmail() {
     throw UnimplementedError();
+  }
+  
+  @override
+  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
+    try {
+      final result = await remoteDataSource.signInWithGoogle();
+      return Right(result);
+    } on ServerException catch (failure) {
+      return left(ServerFailure(failure.message));
+    }
   }
 }

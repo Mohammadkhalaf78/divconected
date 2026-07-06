@@ -1,10 +1,11 @@
 import 'package:dev_connected/core/enums/enum.dart';
-import 'package:dev_connected/features/auth/domain/entites/user.dart';
+import 'package:dev_connected/features/auth/domain/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/login_use_case.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/login_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/register_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/register_use_case.dart';
+import 'package:dev_connected/features/auth/domain/use_case/sign_in_with_google_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,11 +22,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   final RegisterUseCase registerUseCase;
   final ForgetPasswordUsecase forgetPasswordUsecase;
-  AuthBloc(this.loginUseCase, this.registerUseCase, this.forgetPasswordUsecase)
-    : super(const AuthState()) {
+  final SignInWithGoogleUsecase signInWithGoogleUsecase;
+  AuthBloc(
+    this.loginUseCase,
+    this.registerUseCase,
+    this.forgetPasswordUsecase,
+    this.signInWithGoogleUsecase,
+  ) : super(const AuthState()) {
     on<LoginRequested>(_login);
     on<RegisterRequested>(_register);
     on<ForgotPasswordRequested>(_forgotPassword);
+    on<SignInWithGoogleRequested>(_signInWithGoogle);
   }
 
   Future<void> _login(LoginRequested event, Emitter<AuthState> emit) async {
@@ -54,7 +61,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(registerState: RequestState.loading));
 
     final result = await registerUseCase(
-      RegisterParams(email: event.email, password: event.password),
+      RegisterParams(
+        email: event.email,
+        password: event.password,
+        phone: event.phone,
+        fullName: event.fullName,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
     );
 
     result.fold(
@@ -86,6 +99,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       ),
       (_) => emit(state.copyWith(forgotPasswordState: RequestState.loaded)),
+    );
+  }
+
+  Future<void> _signInWithGoogle(
+    SignInWithGoogleRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(signInWithGoogleState: RequestState.loading));
+
+    final result = await signInWithGoogleUsecase();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          signInWithGoogleState: RequestState.error,
+          signinWithGoogleMessage: failure.message,
+        ),
+      ),
+      (r) => emit(
+        state.copyWith(
+          signInWithGoogleState: RequestState.loaded,
+          currentUser: r,
+        ),
+      ),
     );
   }
 }

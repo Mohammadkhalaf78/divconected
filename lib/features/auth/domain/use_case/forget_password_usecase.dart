@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:dev_connected/core/network/failures.dart';
-import 'package:dev_connected/features/auth/data/models/user_model.dart';
 import 'package:dev_connected/features/auth/domain/repository/base_auth_repository.dart';
 
 class ForgetPasswordUsecase {

@@ -15,9 +15,10 @@ class RegisterScreen extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     TextEditingController confirmPasswordController = TextEditingController();
+    TextEditingController phoneController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(),sl()),
+      create: (context) => AuthBloc(sl(), sl(),sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.registerState == RequestState.error) {
@@ -145,6 +146,21 @@ class RegisterScreen extends StatelessWidget {
                                   AppTextFormFiled(
                                     controller: emailController,
                                     hintText: 'jane@example.com',
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  const Text(
+                                    'Phone Number',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: ColorsManager.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  AppTextFormFiled(
+                                    controller: phoneController,
+                                    hintText: '123-456-7890',
                                   ),
 
                                   const SizedBox(height: 20),
@@ -298,7 +314,8 @@ class RegisterScreen extends StatelessWidget {
                                         onTap: () {
                                           context.read<AuthBloc>().add(
                                             RegisterRequested(
-                                              
+                                              phone: phoneController.text,
+                                              fullName: fullNameController.text,
                                               email: emailController.text,
                                               password:
                                                   passwordController.text,

@@ -20,11 +20,18 @@ class LoginRequested extends AuthEvent {
 class RegisterRequested extends AuthEvent {
   final String email;
   final String password;
+  final String phone;
+  final String fullName;
 
-  const RegisterRequested({required this.email, required this.password});
+  const RegisterRequested({
+    required this.email,
+    required this.password,
+    required this.phone,
+    required this.fullName,
+  });
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email, password, phone, fullName];
 }
 
 class ForgotPasswordRequested extends AuthEvent {
@@ -34,4 +41,11 @@ class ForgotPasswordRequested extends AuthEvent {
 
   @override
   List<Object> get props => [email];
+}
+
+class SignInWithGoogleRequested extends AuthEvent {
+  const SignInWithGoogleRequested();
+
+  @override
+  List<Object> get props => [];
 }

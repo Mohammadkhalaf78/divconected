@@ -1,8 +1,7 @@
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:equatable/equatable.dart';
 
-
-class AuthUser extends Equatable {
+class UserEntity extends Equatable {
   final String id;
   final String fullName;
   final String email;
@@ -10,8 +9,10 @@ class AuthUser extends Equatable {
   final String? profileImage;
   final bool isEmailVerified;
   final UserRole role;
+  final String? phone;
+  final String createdAt;
 
-  const AuthUser({
+  const UserEntity({
     required this.id,
     required this.fullName,
     required this.email,
@@ -19,6 +20,8 @@ class AuthUser extends Equatable {
     this.profileImage,
     required this.isEmailVerified,
     required this.role,
+    this.phone,
+    required this.createdAt,
   });
 
   @override
@@ -30,5 +33,6 @@ class AuthUser extends Equatable {
     profileImage,
     isEmailVerified,
     role,
+    phone,
   ];
 }

@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(),sl()),
+      create: (context) => AuthBloc(sl(), sl(),sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.logInState == RequestState.error) {
@@ -28,6 +28,14 @@ class LoginScreen extends StatelessWidget {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text('Login Successful')));
+          }else if (state.signInWithGoogleState == RequestState.error) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.signinWithGoogleMessage)));
+          } else if (state.signInWithGoogleState == RequestState.loaded) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Login with Google Successful')));
           }
         },
         builder: (context, state) {
@@ -190,29 +198,36 @@ class LoginScreen extends StatelessWidget {
                             SizedBox(height: 16),
 
                             // Google only
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    // Handle Google login button press
-                                  },
-                                  icon: Image.asset(
-                                    'assets/images/google.png',
-                                    width: 40,
-                                    height: 40,
+                            InkWell(
+                              onTap: () {
+                                context.read<AuthBloc>().add(
+                                  SignInWithGoogleRequested(),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      // Handle Google login button press
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/google.png',
+                                      width: 40,
+                                      height: 40,
+                                    ),
                                   ),
-                                ),
-
-                                Text(
-                                  'Google',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: ColorsManager.black,
+                              
+                                  Text(
+                                    'Google',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: ColorsManager.black,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(height: 8),
 
