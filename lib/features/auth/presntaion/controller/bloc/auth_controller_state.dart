@@ -55,7 +55,6 @@ class AuthState extends Equatable {
   ];
 }
 
-final class AuthControllerInitial extends AuthState {}
 
 @override
 final class PasswordVisibilityChanged extends AuthState {

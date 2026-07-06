@@ -255,7 +255,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(14),
                                   onTap: () {
                                     context.read<AuthBloc>().add(
-                                      ForgotPasswordEvent(
+                                      ForgotPasswordRequested(
                                         email: emailController.text,
                                       ),
                                     );

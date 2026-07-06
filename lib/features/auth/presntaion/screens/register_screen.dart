@@ -297,7 +297,7 @@ class RegisterScreen extends StatelessWidget {
                                         ),
                                         onTap: () {
                                           context.read<AuthBloc>().add(
-                                            RegisterEvent(
+                                            RegisterRequested(
                                               
                                               email: emailController.text,
                                               password:

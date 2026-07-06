@@ -144,7 +144,7 @@ class LoginScreen extends StatelessWidget {
                             AppTextButton(
                               onPressed: () {
                                 context.read<AuthBloc>().add(
-                                  LoginEvent(
+                                  LoginRequested(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   ),

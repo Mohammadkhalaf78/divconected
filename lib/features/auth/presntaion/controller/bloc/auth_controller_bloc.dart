@@ -22,13 +22,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUseCase registerUseCase;
   final ForgetPasswordUsecase forgetPasswordUsecase;
   AuthBloc(this.loginUseCase, this.registerUseCase, this.forgetPasswordUsecase)
-    : super(AuthControllerInitial()) {
-    on<LoginEvent>(_login);
-    on<RegisterEvent>(_register);
-    on<ForgotPasswordEvent>(_forgotPassword);
+    : super(const AuthState()) {
+    on<LoginRequested>(_login);
+    on<RegisterRequested>(_register);
+    on<ForgotPasswordRequested>(_forgotPassword);
   }
 
-  Future<void> _login(LoginEvent event, Emitter<AuthState> emit) async {
+  Future<void> _login(LoginRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(logInState: RequestState.loading));
 
     final result = await loginUseCase(
@@ -47,7 +47,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _register(RegisterEvent event, Emitter<AuthState> emit) async {
+  Future<void> _register(
+    RegisterRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(state.copyWith(registerState: RequestState.loading));
 
     final result = await registerUseCase(
@@ -68,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _forgotPassword(
-    ForgotPasswordEvent event,
+    ForgotPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
     emit(state.copyWith(forgotPasswordState: RequestState.loading));
@@ -82,11 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           forgotPasswordMessage: failure.message,
         ),
       ),
-      (_) => emit(
-        state.copyWith(
-          forgotPasswordState: RequestState.loaded,
-        ),
-      ),
+      (_) => emit(state.copyWith(forgotPasswordState: RequestState.loaded)),
     );
   }
 }
