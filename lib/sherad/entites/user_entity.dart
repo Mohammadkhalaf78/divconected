@@ -12,6 +12,7 @@ class UserEntity extends Equatable {
   final String? phone;
   final String createdAt;
   final String? bio;
+  final String? imageUrl;
 
   const UserEntity({
     required this.id,
@@ -20,6 +21,7 @@ class UserEntity extends Equatable {
     required this.userName,
     this.profileImage,
     this.bio,
+    this.imageUrl,
     required this.isEmailVerified,
     required this.role,
     this.phone,
@@ -37,5 +39,6 @@ class UserEntity extends Equatable {
     role,
     phone,
     bio,
+    imageUrl 
   ];
 }

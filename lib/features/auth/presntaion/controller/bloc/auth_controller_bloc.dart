@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   bool isPasswordVisible = false;
   void togglePasswordVisibility() {
     isPasswordVisible = !isPasswordVisible;
+    // ignore: invalid_use_of_visible_for_testing_member
     emit(PasswordVisibilityChanged(isPasswordVisible));
   }
 

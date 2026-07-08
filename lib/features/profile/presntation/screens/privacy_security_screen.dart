@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -14,8 +14,6 @@ class PrivacySecurityScreen extends StatefulWidget {
 }
 
 class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
-  // TODO: Replace this local state with real values coming from
-  // a PrivacyBloc / user preferences once you wire this up.
   bool showEmail = true;
   bool showPhone = true;
 
@@ -51,7 +49,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
               height: 90,
               width: 90,
               decoration: BoxDecoration(
-                color: kPrimaryPurple.withOpacity(0.1),
+                color: kPrimaryPurple.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -66,7 +64,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           _SettingsRow(
             icon: Icons.visibility_outlined,
             title: 'Who can view my profile',
-            subtitle: 'Everyone', // TODO: Replace with real selected value
+            subtitle: 'Everyone',
             onTap: () {
               // Handle navigation to profile visibility selection
             },
@@ -121,7 +119,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: kPrimaryPurple.withOpacity(0.08),
+              color: kPrimaryPurple.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -170,7 +168,7 @@ class _SettingsRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -181,7 +179,7 @@ class _SettingsRow extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: kPrimaryPurple.withOpacity(0.1),
+                  color: kPrimaryPurple.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: kPrimaryPurple, size: 18),
@@ -233,7 +231,7 @@ class _ToggleRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -244,7 +242,7 @@ class _ToggleRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: kPrimaryPurple.withOpacity(0.1),
+              color: kPrimaryPurple.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: kPrimaryPurple, size: 18),
@@ -262,7 +260,7 @@ class _ToggleRow extends StatelessWidget {
           ),
           Switch(
             value: value,
-            activeColor: kPrimaryPurple,
+            activeThumbColor: kPrimaryPurple,
             onChanged: onChanged,
           ),
         ],

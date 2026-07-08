@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:flutter/material.dart';
 
 const Color kBackground = Color(0xFFF7F7FC);
@@ -43,7 +43,7 @@ class DeleteAccountScreen extends StatelessWidget {
               height: 100,
               width: 100,
               decoration: BoxDecoration(
-                color: kDangerRed.withOpacity(0.1),
+                color: kDangerRed.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -77,7 +77,7 @@ class DeleteAccountScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: kDangerRed.withOpacity(0.06),
+                color: kDangerRed.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(

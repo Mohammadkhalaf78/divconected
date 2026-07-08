@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dev_connected/core/network/exceptions.dart';
 import 'package:dev_connected/core/network/failures.dart';
@@ -25,6 +27,16 @@ class ProfileRepositoryImp implements BaseProfileRepository {
   Future<Either<Failure, UserEntity>> updateProfile(UpdateProfileParams params) async {
     try {
       final result = await remoteDataSource.updateUserProfile(params);
+      return Right(result);
+    } on ServerException catch (failure) {
+      return left(ServerFailure(failure.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateProfileImage(File image)async {
+    try {
+      final result =await remoteDataSource.updateProfileImage(image);
       return Right(result);
     } on ServerException catch (failure) {
       return left(ServerFailure(failure.message));

@@ -1,34 +1,44 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'dart:io';
+
+import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
+import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/profile/presntation/bloc/profile_bloc.dart';
 import 'package:dev_connected/features/profile/presntation/screens/account_settings_screen.dart';
 import 'package:dev_connected/features/profile/presntation/screens/change_password_screen.dart';
 import 'package:dev_connected/features/profile/presntation/screens/edit_profile_screen.dart';
 import 'package:dev_connected/features/profile/presntation/screens/image_picker_bottom_sheet.dart';
-import 'package:dev_connected/features/profile/presntation/screens/logout_confirmation_screen.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/widgets/logout_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 // Design tokens used across the Profile feature screens.
 const Color kBackground = Color(0xFFF7F7FC);
 
 class ProfileViewScreen extends StatelessWidget {
-  const ProfileViewScreen({super.key});
+  ProfileViewScreen({super.key});
+  final _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc(sl(),sl())..add(GetProfileRequested()),
+      create: (context) =>
+          ProfileBloc(sl(), sl(), sl())..add(GetProfileRequested()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state.profileState == RequestState.error) {
+            AppTopSnackBar.error(context, message: state.profileMessage);
+          }
         },
         builder: (context, state) {
-            // Safely handle nullable userProfile and createdAt.
-            final userProfile = state.userProfile; // may be null
-            final _createdAt = DateTime.tryParse(userProfile?.createdAt ?? '') ?? DateTime.now();
-            final joinedDate = DateFormat('dd MMM yyyy').format(_createdAt);
+          // Safely handle nullable userProfile and createdAt.
+          final userProfile = state.userProfile; // may be null
+          final createdAt =
+              DateTime.tryParse(userProfile?.createdAt ?? '') ?? DateTime.now();
+          final joinedDate = DateFormat('dd MMM yyyy').format(createdAt);
           return Scaffold(
             backgroundColor: ColorsManager.white,
             appBar: AppBar(
@@ -75,7 +85,7 @@ class ProfileViewScreen extends StatelessWidget {
                           radius: 45,
                           // e.g. CircleAvatar(backgroundImage: NetworkImage(user.avatarUrl))
                           backgroundImage: NetworkImage(
-                            'https://img.freepik.com/premium-photo/happy-man-ai-generated-portrait-user-profile_1119669-1.jpg',
+                            'https://imgcdn.stablediffusionweb.com/2024/10/10/dfbf7741-3f6f-478d-b658-f7454c72f33a.jpg',
                           ),
                         ),
                         Positioned(
@@ -84,12 +94,43 @@ class ProfileViewScreen extends StatelessWidget {
                           child: InkWell(
                             onTap: () {
                               // Handle avatar change
-                              Navigator.push(
+                              ProfileImageBottomSheet.show(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ImagePickerBottomSheet(),
-                                ),
+                                onCameraTap: () async {
+                                  // Open Camera
+
+                                  final pickedFile = await _picker.pickImage(
+                                    source: ImageSource.camera,
+                                  );
+
+                                  if (pickedFile != null) {
+                                    final image = File(pickedFile.path);
+
+                                    // ignore: use_build_context_synchronously
+                                    context.read<ProfileBloc>().add(
+                                      UpdateProfileImageRequested(image),
+                                    );
+
+                                    // Navigator.pop(context);
+                                  }
+                                },
+                                onGalleryTap: () async {
+                                  final pickedFile = await _picker.pickImage(
+                                    source: ImageSource.gallery,
+                                  );
+
+                                  if (pickedFile != null) {
+                                    final image = File(pickedFile.path);
+
+                                    // ignore: use_build_context_synchronously
+                                    context.read<ProfileBloc>().add(
+                                      UpdateProfileImageRequested(image),
+                                    );
+                                  }
+                                },
+                                onRemoveTap: () {
+                                  // Delete Image
+                                },
                               );
                             },
                             child: Container(
@@ -133,7 +174,7 @@ class ProfileViewScreen extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: ColorsManager.primary.withOpacity(0.1),
+                      color: ColorsManager.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -143,6 +184,21 @@ class ProfileViewScreen extends StatelessWidget {
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // create bio here
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(32, 107, 114, 128),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      userProfile?.bio ?? '',
+                      textAlign: TextAlign.center,
                     ),
                   ),
 
@@ -158,9 +214,7 @@ class ProfileViewScreen extends StatelessWidget {
                   _InfoCard(
                     icon: Icons.phone_outlined,
                     label: 'Phone',
-                    value:
-                        userProfile?.phone ??
-                        '+20 101 234 5678', // TODO: Replace with real data
+                    value: userProfile?.phone ?? '',
                   ),
                   const SizedBox(height: 12),
                   _InfoCard(
@@ -245,7 +299,8 @@ class ProfileViewScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LogoutConfirmationScreen(),
+                          builder: (context) =>
+                              const LogoutConfirmationScreen(),
                         ),
                       );
                     },
@@ -314,7 +369,7 @@ class _InfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -325,7 +380,7 @@ class _InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: ColorsManager.primary.withOpacity(0.1),
+              color: ColorsManager.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: ColorsManager.primary, size: 18),
@@ -382,7 +437,7 @@ class _AccountRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -393,7 +448,7 @@ class _AccountRow extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: ColorsManager.primary.withOpacity(0.1),
+                  color: ColorsManager.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: ColorsManager.primary, size: 18),

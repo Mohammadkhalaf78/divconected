@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -9,16 +9,16 @@ const Color kWarningAmber = Color(0xFFF59E0B);
 const Color kDangerRed = Color(0xFFEF4444);
 
 class AccountSettingsScreen extends StatefulWidget {
-  const AccountSettingsScreen({super.key});
-
+const  AccountSettingsScreen({super.key});
+  
   @override
   State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
-  // TODO: Replace this local state with the real value coming from
-  // a SettingsBloc / SharedPreferences / theme provider once you wire this up.
   bool isDarkMode = false;
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +53,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             subtitle: 'Update your personal info',
             onTap: () {
               // Handle navigation to Edit Profile screen
+
+            
             },
           ),
           const SizedBox(height: 12),
@@ -68,7 +70,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           _SettingsRow(
             icon: Icons.language_outlined,
             title: 'Language',
-            subtitle: 'English', // TODO: Replace with selected language
+            subtitle: 'English', 
             onTap: () {
               // Handle navigation to Language selection screen
             },
@@ -92,7 +94,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -103,7 +105,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: kPrimaryPurple.withOpacity(0.1),
+                    color: kPrimaryPurple.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -125,7 +127,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 ),
                 Switch(
                   value: isDarkMode,
-                  activeColor: kPrimaryPurple,
+                  activeThumbColor: kPrimaryPurple,
                   onChanged: (value) {
                     setState(() {
                       isDarkMode = value;
@@ -198,7 +200,7 @@ class _SettingsRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.01),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -209,7 +211,7 @@ class _SettingsRow extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: iconColor, size: 18),

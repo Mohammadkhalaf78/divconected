@@ -1,12 +1,13 @@
-import 'package:dev_connected/core/constance/app_button_filed.dart';
-import 'package:dev_connected/core/constance/app_text_form_filed.dart';
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/app_button_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/fotgot_password_screen.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/register_screen.dart';
-import 'package:dev_connected/features/profile/presntation/screens/profile_view_screen.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,37 +23,34 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.logInState == RequestState.error) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.loginMessage)));
+            AppTopSnackBar.error(context, message: state.loginMessage);
           } else if (state.logInState == RequestState.loaded) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Login Successful')));
+            AppTopSnackBar.success(context, message: 'Login Successful');
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProfileViewScreen(),
+                builder: (context) =>  ProfileViewScreen(),
               ),
             );
           } else if (state.signInWithGoogleState == RequestState.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.signinWithGoogleMessage)),
+            AppTopSnackBar.error(
+              context,
+              message: state.signinWithGoogleMessage,
             );
           } else if (state.signInWithGoogleState == RequestState.loaded) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Login with Google Successful')),
+            AppTopSnackBar.success(
+              context,
+              message: 'Login with Google Successful',
             );
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProfileViewScreen(),
+                builder: (context) =>  ProfileViewScreen(),
               ),
             );
           } else if (state.signInWithGoogleState == RequestState.loading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Logging in with Google...')),
-            );
+            AppTopSnackBar.info(context, message: 'Logging in with Google...');
           }
         },
         builder: (context, state) {

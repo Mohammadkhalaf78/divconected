@@ -1,5 +1,5 @@
-import 'package:dev_connected/core/constance/app_button_filed.dart';
-import 'package:dev_connected/core/constance/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_button_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/profile/domain/use_case/paramas/updata_profile_params.dart';
@@ -15,9 +15,10 @@ const Color kTextDark = Color(0xFF1F1F2E);
 const Color kTextGray = Color(0xFF6B7280);
 
 class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key, required this.userProfile});
+
   final UserEntity
   userProfile; // Assuming userprofile is a property in ProfileState
-  EditProfileScreen({super.key, required this.userProfile});
   @override
   Widget build(BuildContext context) {
     TextEditingController fullNameController = TextEditingController(
@@ -36,9 +37,8 @@ class EditProfileScreen extends StatelessWidget {
       text: 'Flutter Developer passionate about building amazing mobile apps.',
     );
 
-
     return BlocProvider(
-      create: (context) => ProfileBloc(sl(), sl()),
+      create: (context) => ProfileBloc(sl(), sl(), sl()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.updateProfileState == RequestState.loaded) {
@@ -52,13 +52,9 @@ class EditProfileScreen extends StatelessWidget {
               ),
             );
           } else if (state.updateProfileState == RequestState.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.updataProfileMessage ,
-                ),
-              ),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.updataProfileMessage)));
           }
         },
         builder: (context, state) {
@@ -96,7 +92,9 @@ class EditProfileScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 45,
-                          backgroundColor: kPrimaryPurple.withOpacity(0.1),
+                          backgroundColor: kPrimaryPurple.withValues(
+                            alpha: 0.1,
+                          ),
                           child: const Icon(
                             Icons.person,
                             size: 45,

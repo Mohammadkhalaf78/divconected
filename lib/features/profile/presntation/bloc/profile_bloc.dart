@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/features/profile/domain/use_case/get_profile_usecase.dart';
 import 'package:dev_connected/features/profile/domain/use_case/paramas/updata_profile_params.dart';
 import 'package:dev_connected/features/profile/domain/use_case/update_profile_usecase.dart';
+import 'package:dev_connected/features/profile/domain/use_case/upload_profile_image_usecase.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,12 +15,17 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetProfileUsecase getProfileUseCase;
   final UpdateProfileUsecase updateProfileUseCase;
-  ProfileBloc(this.getProfileUseCase, this.updateProfileUseCase)
-    : super(const ProfileState()) {
+  final UploadProfileImageUsecase uploadProfileImageUsecase;
+  ProfileBloc(
+    this.getProfileUseCase,
+    this.updateProfileUseCase,
+    this.uploadProfileImageUsecase,
+  ) : super(const ProfileState()) {
     on<ProfileEvent>((event, emit) {});
 
     on<GetProfileRequested>(_getprofile);
     on<UpdateProfileRequested>(_updateProfile);
+    on<UpdateProfileImageRequested>(_updateProfileImage);
   }
 
   Future<void> _getprofile(
@@ -60,5 +68,29 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         state.copyWith(updateProfileState: RequestState.loaded, userProfile: r),
       ),
     );
+  }
+
+  Future<void> _updateProfileImage(
+    UpdateProfileImageRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(state.copyWith(profileImage: event.image));
+
+    // final result = await uploadProfileImageUsecase(event.image);
+
+    // result.fold(
+    //   (failure) => emit(
+    //     state.copyWith(
+    //       updateProfileState: RequestState.error,
+    //       updataProfileMessage: failure.message,
+    //     ),
+    //   ),
+    //   (r) => emit(
+    //     state.copyWith(
+    //       updateProfileState: RequestState.loaded,
+    //       profileImage: event.image,
+    //     ),
+    //   ),
+    // );
   }
 }

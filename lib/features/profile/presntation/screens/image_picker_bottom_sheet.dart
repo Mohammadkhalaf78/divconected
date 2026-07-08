@@ -1,161 +1,155 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
 import 'package:flutter/material.dart';
 
-const Color kPrimaryPurple = Color(0xFF6C63FF);
-const Color kTextDark = Color(0xFF1F1F2E);
-const Color kDangerRed = Color(0xFFEF4444);
+class ProfileImageBottomSheet {
+  ProfileImageBottomSheet._();
 
-/// Call this helper to show the "Select Photo" bottom sheet
-/// on top of any screen, e.g. from the "Change Photo" button
-/// in EditProfileScreen:
-///
-/// ```dart
-/// onPressed: () => showImagePickerBottomSheet(context),
-/// ```
-Future<void> showImagePickerBottomSheet(BuildContext context) {
-  return showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (context) => const ImagePickerBottomSheet(),
-  );
-}
-
-class ImagePickerBottomSheet extends StatelessWidget {
-  const ImagePickerBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: const BoxDecoration(
-        color: ColorsManager.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Drag handle
-          Container(
-            height: 4,
-            width: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE5E7EB),
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          const Text(
-            'Select Photo',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: kTextDark,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          _OptionRow(
-            icon: Icons.camera_alt_outlined,
-            label: 'Camera',
-            onTap: () {
-              // Handle open camera
-              Navigator.pop(context);
-            },
-          ),
-          const SizedBox(height: 12),
-          _OptionRow(
-            icon: Icons.photo_library_outlined,
-            label: 'Photo Library',
-            onTap: () {
-              // Handle open photo library
-              Navigator.pop(context);
-            },
-          ),
-          const SizedBox(height: 12),
-          _OptionRow(
-            icon: Icons.delete_outline,
-            iconColor: kDangerRed,
-            label: 'Remove Photo',
-            labelColor: kDangerRed,
-            onTap: () {
-              // Handle remove current photo
-              Navigator.pop(context);
-            },
-          ),
-
-          const SizedBox(height: 16),
-
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: OutlinedButton(
-              onPressed: () {
-                // Handle cancel button press
-                Navigator.pop(context);
-              },
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFFE5E7EB)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+  static Future<void> show(
+    BuildContext context, {
+    VoidCallback? onCameraTap,
+    VoidCallback? onGalleryTap,
+    VoidCallback? onRemoveTap,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      enableDrag: true,
+      isDismissible: true,
+      builder: (_) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: .38,
+          minChildSize: .30,
+          maxChildSize: .55,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(28),
                 ),
               ),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: kTextDark,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              child: ListView(
+                controller: controller,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
                 ),
-              ),
-            ),
-          ),
+                children: [
+                  const SizedBox(height: 8),
 
-          const SizedBox(height: 8),
-        ],
-      ),
+                  const Text(
+                    "Profile Photo",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  _Tile(
+                    icon: Icons.camera_alt_rounded,
+                    title: "Take Photo",
+                    color: Colors.deepPurple,
+                    onTap: () {
+                      Navigator.pop(context);
+                      onCameraTap?.call();
+                    },
+                  ),
+
+                  _Tile(
+                    icon: Icons.photo_library_rounded,
+                    title: "Choose From Gallery",
+                    color: Colors.blue,
+                    onTap: () {
+                      Navigator.pop(context);
+                      onGalleryTap?.call();
+                    },
+                  ),
+
+                  _Tile(
+                    icon: Icons.delete_outline_rounded,
+                    title: "Remove Photo",
+                    color: Colors.red,
+                    onTap: () {
+                      Navigator.pop(context);
+                      onRemoveTap?.call();
+                    },
+                  ),
+
+                  const SizedBox(height: 12),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
 
-class _OptionRow extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String label;
-  final Color labelColor;
-  final VoidCallback onTap;
-
-  const _OptionRow({
+class _Tile extends StatelessWidget {
+  const _Tile({
     required this.icon,
-    this.iconColor = kPrimaryPurple,
-    required this.label,
-    this.labelColor = kTextDark,
+    required this.title,
+    required this.color,
     required this.onTap,
   });
 
+  final IconData icon;
+  final String title;
+  final Color color;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-          child: Row(
-            children: [
-              Icon(icon, color: iconColor, size: 22),
-              const SizedBox(width: 14),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: labelColor,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Material(
+        color: color.withValues(alpha: .1),
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: color.withValues(alpha: .1),
+                  child: Icon(
+                    icon,
+                    color: color,
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(width: 16),
+
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
           ),
         ),
       ),

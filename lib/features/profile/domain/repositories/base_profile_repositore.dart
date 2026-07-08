@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dev_connected/core/network/failures.dart';
 import 'package:dev_connected/features/profile/domain/use_case/paramas/updata_profile_params.dart';
@@ -7,5 +9,6 @@ abstract class BaseProfileRepository {
 
   Future<Either<Failure, UserEntity>> getProfile();
   Future<Either<Failure, UserEntity>> updateProfile(UpdateProfileParams params);
+  Future<Either<Failure, String>> updateProfileImage(File image);
 
 }

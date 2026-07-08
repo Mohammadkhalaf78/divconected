@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:flutter/material.dart';
 
 class AppTextFormFiled extends StatelessWidget {

@@ -4,15 +4,18 @@ import 'package:dev_connected/features/profile/data/repoitories/profile_reposito
 import 'package:dev_connected/features/profile/domain/repositories/base_profile_repositore.dart';
 import 'package:dev_connected/features/profile/domain/use_case/get_profile_usecase.dart';
 import 'package:dev_connected/features/profile/domain/use_case/update_profile_usecase.dart';
+import 'package:dev_connected/features/profile/domain/use_case/upload_profile_image_usecase.dart';
 import 'package:dev_connected/features/profile/presntation/bloc/profile_bloc.dart';
 
 void initProfileInjection() {
   // Bloc
-  sl.registerFactory(() => ProfileBloc(sl(),sl()));
+  sl.registerFactory(() => ProfileBloc(sl(),sl(),sl()));
 
   // UseCase
   sl.registerLazySingleton(() => GetProfileUsecase(sl()));
   sl.registerLazySingleton(() => UpdateProfileUsecase(sl()));
+  sl.registerLazySingleton(() => UploadProfileImageUsecase(sl()));
+  
 
   // Repository
   sl.registerLazySingleton<BaseProfileRepository>(

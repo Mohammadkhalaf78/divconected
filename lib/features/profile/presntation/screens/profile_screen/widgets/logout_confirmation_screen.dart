@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
@@ -69,7 +69,7 @@ class LogoutConfirmationScreen extends StatelessWidget {
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
-                      color: kPrimaryPurple.withOpacity(0.1),
+                      color: kPrimaryPurple.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

@@ -1,5 +1,5 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
-import 'package:dev_connected/features/profile/presntation/screens/profile_view_screen.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -25,7 +25,7 @@ class UpdateProfileSuccessScreen extends StatelessWidget {
                 height: 120,
                 width: 120,
                 decoration: BoxDecoration(
-                  color: kSuccessGreen.withOpacity(0.1),
+                  color: kSuccessGreen.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -59,7 +59,7 @@ class UpdateProfileSuccessScreen extends StatelessWidget {
                       Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProfileViewScreen(),
+                builder: (context) =>  ProfileViewScreen(),
               ),
             );
                   },

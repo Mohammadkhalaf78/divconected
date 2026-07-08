@@ -11,10 +11,9 @@ class ProfileScreen extends StatelessWidget {
     
     return BlocProvider(
       create: (context) =>
-          ProfileBloc(sl(),sl())..add(GetProfileRequested()),
+          ProfileBloc(sl(),sl(),sl())..add(GetProfileRequested()),
       child: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          // TODO: implement listener
         },
         child: Scaffold(
           body: Center(

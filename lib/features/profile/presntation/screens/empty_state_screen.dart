@@ -1,4 +1,4 @@
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -26,7 +26,7 @@ class EmptyStateScreen extends StatelessWidget {
                     height: 120,
                     width: 120,
                     decoration: BoxDecoration(
-                      color: kPrimaryPurple.withOpacity(0.1),
+                      color: kPrimaryPurple.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

@@ -1,5 +1,5 @@
-import 'package:dev_connected/core/constance/app_text_form_filed.dart';
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
@@ -18,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
     TextEditingController phoneController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(),sl(),sl(),sl()),
+      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.registerState == RequestState.error) {
@@ -109,7 +109,7 @@ class RegisterScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     blurRadius: 20,
                                     offset: const Offset(0, 8),
                                   ),
@@ -175,16 +175,13 @@ class RegisterScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   AppTextFormFiled(
-                                    isObscureText:
-                                        !context
-                                            .read<AuthBloc>()
-                                            .isPasswordVisible,
+                                    isObscureText: !context
+                                        .read<AuthBloc>()
+                                        .isPasswordVisible,
                                     controller: passwordController,
                                     hintText: 'Enter your password',
                                     suffixIcons: IconButton(
-                                      icon: const Icon(
-                                        Icons.visibility_off,
-                                      ),
+                                      icon: const Icon(Icons.visibility_off),
                                       onPressed: () {
                                         // Handle password visibility toggle
                                         context
@@ -201,8 +198,7 @@ class RegisterScreen extends StatelessWidget {
                                     valueListenable: passwordController,
                                     builder: (context, value, _) {
                                       final password = value.text;
-                                      final hasMinLength =
-                                          password.length >= 8;
+                                      final hasMinLength = password.length >= 8;
                                       final hasUppercase = password.contains(
                                         RegExp(r'[A-Z]'),
                                       );
@@ -220,9 +216,10 @@ class RegisterScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: const Color(
                                             0xFF6C5CE7,
-                                          ).withOpacity(0.06),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          ).withValues(alpha: 0.06),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
@@ -298,8 +295,9 @@ class RegisterScreen extends StatelessWidget {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFF6C5CE7)
-                                              .withOpacity(0.3),
+                                          color: const Color(
+                                            0xFF6C5CE7,
+                                          ).withValues(alpha: 0.1),
                                           blurRadius: 15,
                                           offset: const Offset(0, 8),
                                         ),
@@ -308,18 +306,14 @@ class RegisterScreen extends StatelessWidget {
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        borderRadius: BorderRadius.circular(
-                                          14,
-                                        ),
+                                        borderRadius: BorderRadius.circular(14),
                                         onTap: () {
                                           context.read<AuthBloc>().add(
                                             RegisterRequested(
                                               phone: phoneController.text,
                                               fullName: fullNameController.text,
                                               email: emailController.text,
-                                              password:
-                                                  passwordController.text,
-                                              
+                                              password: passwordController.text,
                                             ),
                                           );
                                         },
@@ -408,10 +402,7 @@ class _PasswordRequirementRow extends StatelessWidget {
   final String label;
   final bool isValid;
 
-  const _PasswordRequirementRow({
-    required this.label,
-    required this.isValid,
-  });
+  const _PasswordRequirementRow({required this.label, required this.isValid});
 
   @override
   Widget build(BuildContext context) {

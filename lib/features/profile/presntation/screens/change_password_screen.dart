@@ -1,5 +1,5 @@
-import 'package:dev_connected/core/constance/app_button_filed.dart';
-import 'package:dev_connected/core/constance/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_button_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -51,7 +51,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 height: 90,
                 width: 90,
                 decoration: BoxDecoration(
-                  color: kPrimaryPurple.withOpacity(0.1),
+                  color: kPrimaryPurple.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -111,7 +111,7 @@ class ChangePasswordScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: kPrimaryPurple.withOpacity(0.06),
+                    color: kPrimaryPurple.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(

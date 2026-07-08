@@ -1,5 +1,5 @@
-import 'package:dev_connected/core/constance/app_text_form_filed.dart';
-import 'package:dev_connected/core/constance/colors_manager.dart';
+import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';

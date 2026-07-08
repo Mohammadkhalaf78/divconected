@@ -82,7 +82,7 @@ class AuthState extends Equatable {
 final class PasswordVisibilityChanged extends AuthState {
   final bool isPasswordVisible;
 
-  PasswordVisibilityChanged(this.isPasswordVisible);
+const  PasswordVisibilityChanged(this.isPasswordVisible);
 
   @override
   List<Object?> get props => [isPasswordVisible];
