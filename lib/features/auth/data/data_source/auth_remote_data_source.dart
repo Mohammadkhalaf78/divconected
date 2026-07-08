@@ -38,7 +38,8 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: credentials.user!.emailVerified,
         role: UserRole.company,
         phone: '',
-        createdAt: '', bio: '',
+        createdAt: '',
+        bio: '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
@@ -66,7 +67,8 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: credentials.user!.emailVerified,
         role: UserRole.developer,
         phone: params.phone,
-        createdAt: params.createdAt, bio: '',
+        createdAt: params.createdAt,
+        bio: '',
       );
 
       await FirebaseFirestore.instance
@@ -84,6 +86,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
   Future<UserModel> forgotPassword(ForgotPasswordParams params) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: params.email);
+      print("Password reset email sent");
 
       return UserModel(
         id: '',
@@ -93,9 +96,12 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         fullName: '',
         userName: '',
         phone: '',
-        createdAt: '', bio: '',
+        createdAt: '',
+        bio: '',
       );
     } on FirebaseAuthException catch (e) {
+      print(e.code);
+      print(e.message);
       throw ServerException(e.message ?? 'An error occurred');
     }
   }
@@ -110,7 +116,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
 
       final googleUser = await GoogleSignIn.instance.authenticate();
 
-      final googleAuth =  googleUser.authentication;
+      final googleAuth = googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
@@ -134,19 +140,20 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
         role: UserRole.company,
         phone: '',
-        createdAt: '', bio: '',
+        createdAt: '',
+        bio: '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
   }
-  
+
   @override
   Future<void> logOut() async {
     try {
       await firebaseAuth.signOut();
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
-    }    
+    }
   }
 }

@@ -9,6 +9,8 @@ import 'package:dev_connected/features/profile/presntation/screens/account_setti
 import 'package:dev_connected/features/profile/presntation/screens/change_password_screen.dart';
 import 'package:dev_connected/features/profile/presntation/screens/edit_profile_screen.dart';
 import 'package:dev_connected/features/profile/presntation/screens/image_picker_bottom_sheet.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/widgets/account_row.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/widgets/info_card.dart';
 import 'package:dev_connected/features/profile/presntation/screens/profile_screen/widgets/logout_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -205,25 +207,25 @@ class ProfileViewScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Info cards
-                  _InfoCard(
+                  InfoCard(
                     icon: Icons.email_outlined,
                     label: 'Email',
                     value: userProfile?.email ?? 'ahmed@example.com',
                   ),
                   const SizedBox(height: 12),
-                  _InfoCard(
+                  InfoCard(
                     icon: Icons.phone_outlined,
                     label: 'Phone',
                     value: userProfile?.phone ?? '',
                   ),
                   const SizedBox(height: 12),
-                  _InfoCard(
+                  InfoCard(
                     icon: Icons.calendar_today_outlined,
                     label: 'Member Since',
                     value: joinedDate,
                   ),
                   const SizedBox(height: 12),
-                  _InfoCard(
+                  InfoCard(
                     icon: Icons.location_on_outlined,
                     label: 'Location',
                     value: 'Cairo, Egypt',
@@ -244,7 +246,7 @@ class ProfileViewScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  _AccountRow(
+                  AccountRow(
                     icon: Icons.edit_outlined,
                     title: 'Edit Profile',
                     subtitle: 'Update your personal info',
@@ -260,7 +262,7 @@ class ProfileViewScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 12),
-                  _AccountRow(
+                  AccountRow(
                     icon: Icons.lock_outline,
                     title: 'Change Password',
                     subtitle: 'Update your password',
@@ -275,7 +277,7 @@ class ProfileViewScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 12),
-                  _AccountRow(
+                  AccountRow(
                     icon: Icons.settings_outlined,
                     title: 'Account Settings',
                     subtitle: 'Manage your preferences',
@@ -290,7 +292,7 @@ class ProfileViewScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 12),
-                  _AccountRow(
+                  AccountRow(
                     icon: Icons.logout_outlined,
                     title: 'Logout',
                     subtitle: 'Sign out of your account',
@@ -348,140 +350,3 @@ class ProfileViewScreen extends StatelessWidget {
   }
 }
 
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _InfoCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: ColorsManager.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: ColorsManager.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: ColorsManager.primary, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(fontSize: 12, color: ColorsManager.grey),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: ColorsManager.black,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AccountRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  const _AccountRow({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: ColorsManager.white,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: ColorsManager.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: ColorsManager.primary, size: 18),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: ColorsManager.black,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: ColorsManager.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right, color: ColorsManager.grey),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
