@@ -49,3 +49,10 @@ class SignInWithGoogleRequested extends AuthEvent {
   @override
   List<Object> get props => [];
 }
+  
+class LogoutRequested extends AuthEvent {
+  const LogoutRequested();
+
+  @override
+  List<Object> get props => [];
+}

@@ -1,5 +1,5 @@
 import 'package:dev_connected/core/enums/enum.dart';
-import 'package:dev_connected/features/auth/domain/entites/user_entity.dart';
+import 'package:dev_connected/sherad/entites/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
@@ -11,10 +11,12 @@ class UserModel extends UserEntity {
     required super.role,
     required super.phone,
     required super.createdAt,
+    required super.bio,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'bio': bio,
       'id': id,
       'fullName': fullName,
       'email': email,
@@ -30,6 +32,7 @@ class UserModel extends UserEntity {
   // 🔥 Firestore → object
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      bio: map['bio'],
       id: map['id'],
       fullName: map['fullName'],
       email: map['email'],

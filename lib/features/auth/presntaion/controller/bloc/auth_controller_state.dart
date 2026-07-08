@@ -1,5 +1,7 @@
 part of 'auth_controller_bloc.dart';
 
+
+// this class is used to manage the state of the auth controller bloc
 class AuthState extends Equatable {
   const AuthState({
     this.currentUser,
@@ -7,10 +9,12 @@ class AuthState extends Equatable {
     this.forgotPasswordMessage = '',
     this.signinWithGoogleMessage = '',
     this.registerMessage = '',
+    this.logoutMessage = '',
     this.logInState = RequestState.inital,
     this.registerState = RequestState.inital,
     this.forgotPasswordState = RequestState.inital,
     this.signInWithGoogleState = RequestState.inital,
+    this.logoutState = RequestState.inital,
   });
 
   AuthState copyWith({
@@ -19,10 +23,12 @@ class AuthState extends Equatable {
     String? forgotPasswordMessage,
     String? signinWithGoogleMessage,
     String? registerMessage,
+    String? logoutMessage,
     RequestState? logInState,
     RequestState? registerState,
     RequestState? forgotPasswordState,
     RequestState? signInWithGoogleState,
+    RequestState? logoutState,
   }) {
     return AuthState(
       currentUser: currentUser ?? this.currentUser,
@@ -35,6 +41,8 @@ class AuthState extends Equatable {
       registerMessage: registerMessage ?? this.registerMessage,
       signinWithGoogleMessage: signinWithGoogleMessage ?? this.signinWithGoogleMessage,
       signInWithGoogleState: signInWithGoogleState ?? this.signInWithGoogleState,
+      logoutMessage: logoutMessage ?? this.logoutMessage,
+      logoutState: logoutState ?? this.logoutState,
     );
   }
 
@@ -45,11 +53,13 @@ class AuthState extends Equatable {
   final String forgotPasswordMessage;
   final String registerMessage;
   final String signinWithGoogleMessage;
+  final String logoutMessage ;
   // what state is loading or loadad or error
   final RequestState logInState;
   final RequestState registerState;
   final RequestState forgotPasswordState;
   final RequestState signInWithGoogleState;
+  final RequestState logoutState ;
 
   @override
   List<Object?> get props => [
@@ -62,6 +72,8 @@ class AuthState extends Equatable {
     registerMessage,
     signinWithGoogleMessage,
     signInWithGoogleState,
+    logoutMessage,
+    logoutState,
   ];
 }
 

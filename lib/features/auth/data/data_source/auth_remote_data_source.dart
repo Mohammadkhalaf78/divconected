@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/network/exceptions.dart';
-import 'package:dev_connected/features/auth/data/models/user_model.dart';
+import 'package:dev_connected/sherad/models/user_model.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/forgot_password_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/login_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/register_params.dart';
@@ -13,6 +13,7 @@ abstract class BaseAuthRemoteDataSource {
   Future<UserModel> register(RegisterParams params);
   Future<UserModel> forgotPassword(ForgotPasswordParams params);
   Future<UserModel> signInWithGoogle();
+  Future<void> logOut();
 }
 
 class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
@@ -37,7 +38,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: credentials.user!.emailVerified,
         role: UserRole.company,
         phone: '',
-        createdAt: '',
+        createdAt: '', bio: '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
@@ -65,7 +66,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: credentials.user!.emailVerified,
         role: UserRole.developer,
         phone: params.phone,
-        createdAt: params.createdAt,
+        createdAt: params.createdAt, bio: '',
       );
 
       await FirebaseFirestore.instance
@@ -79,6 +80,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
     }
   }
 
+  @override
   Future<UserModel> forgotPassword(ForgotPasswordParams params) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: params.email);
@@ -91,7 +93,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         fullName: '',
         userName: '',
         phone: '',
-        createdAt: '',
+        createdAt: '', bio: '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
@@ -108,7 +110,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
 
       final googleUser = await GoogleSignIn.instance.authenticate();
 
-      final googleAuth = await googleUser.authentication;
+      final googleAuth =  googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
@@ -132,10 +134,19 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         isEmailVerified: user.emailVerified,
         role: UserRole.company,
         phone: '',
-        createdAt: '',
+        createdAt: '', bio: '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
+  }
+  
+  @override
+  Future<void> logOut() async {
+    try {
+      await firebaseAuth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.message ?? 'An error occurred');
+    }    
   }
 }

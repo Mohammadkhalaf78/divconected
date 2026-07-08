@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dev_connected/core/network/exceptions.dart';
 import 'package:dev_connected/core/network/failures.dart';
 import 'package:dev_connected/features/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:dev_connected/features/auth/domain/entites/user_entity.dart';
+import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/repository/base_auth_repository.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/forgot_password_params.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/login_params.dart';
@@ -61,5 +61,16 @@ class AuthRepositoryImp implements BaseAuthRepository {
     } on ServerException catch (failure) {
       return left(ServerFailure(failure.message));
     }
+  }
+  
+  @override
+  Future<Either<Failure, void>> logOut() async {
+    try {
+      final result =await remoteDataSource.logOut();
+      return Right(result);
+    } on ServerException catch (failure) {
+      return left(ServerFailure(failure.message));
+    }
+    
   }
 }

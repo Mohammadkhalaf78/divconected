@@ -1,34 +1,24 @@
-import 'package:dev_connected/features/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:dev_connected/features/auth/data/repository/auth_repository_imp.dart';
-import 'package:dev_connected/features/auth/domain/repository/base_auth_repository.dart';
-import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
-import 'package:dev_connected/features/auth/domain/use_case/login_use_case.dart';
-import 'package:dev_connected/features/auth/domain/use_case/register_use_case.dart';
-import 'package:dev_connected/features/auth/domain/use_case/sign_in_with_google_usecase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dev_connected/features/auth/auth_injection.dart';
+import 'package:dev_connected/features/profile/profile_injection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 
 class ServiceLocator {
-  void init() {
-    //use case
-    sl.registerLazySingleton(() => LoginUseCase(sl()));
-    sl.registerLazySingleton(()=> RegisterUseCase(sl()));
-    sl.registerLazySingleton(()=> ForgetPasswordUsecase(sl()));
-    sl.registerLazySingleton(()=> SignInWithGoogleUsecase(sl()));
-    
-    //repositories
-    sl.registerLazySingleton<BaseAuthRepository>(
-      () => AuthRepositoryImp(remoteDataSource: sl()),
-    );
-
-    // Data sources
-    sl.registerLazySingleton<BaseAuthRemoteDataSource>(
-      () => FirebaseRemoteDataSourceImp(sl()),
-    );
-
+  Future<void> init() async {
     // External
-    sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+    sl.registerLazySingleton<FirebaseAuth>(
+      () => FirebaseAuth.instance,
+    );
+
+    sl.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
+
+    // Features
+    initAuthInjection();
+    initProfileInjection();
   }
 }

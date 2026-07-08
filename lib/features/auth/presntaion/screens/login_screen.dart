@@ -6,6 +6,7 @@ import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/fotgot_password_screen.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/register_screen.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class LoginScreen extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(),sl(),sl()),
+      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.logInState == RequestState.error) {
@@ -28,14 +29,30 @@ class LoginScreen extends StatelessWidget {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text('Login Successful')));
-          }else if (state.signInWithGoogleState == RequestState.error) {
-            ScaffoldMessenger.of(
+            Navigator.pushReplacement(
               context,
-            ).showSnackBar(SnackBar(content: Text(state.signinWithGoogleMessage)));
+              MaterialPageRoute(
+                builder: (context) => const ProfileViewScreen(),
+              ),
+            );
+          } else if (state.signInWithGoogleState == RequestState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.signinWithGoogleMessage)),
+            );
           } else if (state.signInWithGoogleState == RequestState.loaded) {
-            ScaffoldMessenger.of(
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Login with Google Successful')),
+            );
+            Navigator.pushReplacement(
               context,
-            ).showSnackBar(SnackBar(content: Text('Login with Google Successful')));
+              MaterialPageRoute(
+                builder: (context) => const ProfileViewScreen(),
+              ),
+            );
+          } else if (state.signInWithGoogleState == RequestState.loading) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Logging in with Google...')),
+            );
           }
         },
         builder: (context, state) {
@@ -48,7 +65,6 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       SizedBox(
                         height: 360,
-
 
                         child: Image.asset(
                           'assets/images/divconneted.png',
@@ -113,14 +129,18 @@ class LoginScreen extends StatelessWidget {
                             SizedBox(height: 8),
 
                             AppTextFormFiled(
-                              isObscureText: !context.read<AuthBloc>().isPasswordVisible,
+                              isObscureText: !context
+                                  .read<AuthBloc>()
+                                  .isPasswordVisible,
                               controller: passwordController,
                               hintText: 'Enter your password',
                               suffixIcons: IconButton(
                                 icon: Icon(Icons.visibility_off),
                                 onPressed: () {
                                   // Handle password visibility toggle
-                                  context.read<AuthBloc>().togglePasswordVisibility();
+                                  context
+                                      .read<AuthBloc>()
+                                      .togglePasswordVisibility();
                                 },
                               ),
                             ),
@@ -217,7 +237,7 @@ class LoginScreen extends StatelessWidget {
                                       height: 40,
                                     ),
                                   ),
-                              
+
                                   Text(
                                     'Google',
                                     textAlign: TextAlign.center,
@@ -247,8 +267,7 @@ class LoginScreen extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                             RegisterScreen(),
+                                        builder: (context) => RegisterScreen(),
                                       ),
                                     );
                                   },

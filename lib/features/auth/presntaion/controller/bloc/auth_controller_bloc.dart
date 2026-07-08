@@ -1,5 +1,6 @@
 import 'package:dev_connected/core/enums/enum.dart';
-import 'package:dev_connected/features/auth/domain/entites/user_entity.dart';
+import 'package:dev_connected/features/auth/domain/use_case/logout_usecase.dart';
+import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/login_use_case.dart';
 import 'package:dev_connected/features/auth/domain/use_case/params/login_params.dart';
@@ -23,16 +24,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUseCase registerUseCase;
   final ForgetPasswordUsecase forgetPasswordUsecase;
   final SignInWithGoogleUsecase signInWithGoogleUsecase;
+  final LogoutUsecase logoutUsecase;
   AuthBloc(
     this.loginUseCase,
     this.registerUseCase,
     this.forgetPasswordUsecase,
-    this.signInWithGoogleUsecase,
+    this.signInWithGoogleUsecase, this.logoutUsecase,
   ) : super(const AuthState()) {
     on<LoginRequested>(_login);
     on<RegisterRequested>(_register);
     on<ForgotPasswordRequested>(_forgotPassword);
     on<SignInWithGoogleRequested>(_signInWithGoogle);
+    on<LogoutRequested>(_logout);
   }
 
   Future<void> _login(LoginRequested event, Emitter<AuthState> emit) async {
@@ -125,4 +128,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
   }
+ 
+  Future<void> _logout(
+    LogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(logoutState: RequestState.loading));
+
+    final result = await logoutUsecase();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          logoutState: RequestState.error,
+          logoutMessage: failure.message,
+        ),
+      ),
+      (_) => emit(
+        state.copyWith(
+          logoutState: RequestState.loaded,
+          currentUser: null,
+        ),
+      ),
+    );
+  }
+
 }
