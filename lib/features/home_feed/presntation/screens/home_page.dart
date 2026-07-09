@@ -1,13 +1,16 @@
 import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/home_feed/presntation/bloc/home_feed_bloc.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/post_card.dart';
+import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final UserEntity? user;
+  const HomePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -21,55 +24,63 @@ class HomePage extends StatelessWidget {
         },
         builder: (context, state) {
           final posts = state.currentPosts;
-          return Scaffold(
-            backgroundColor: const Color(0xFFF5F6F8),
-            appBar: _HomeAppBar(),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {},
-              backgroundColor: const Color(0xFF3B82F6),
-              elevation: 2,
-              child: const Icon(Icons.add, color: Colors.white, size: 30),
-            ),
-            bottomNavigationBar: const _HomeBottomNavBar(),
-            body: RefreshIndicator(
-              onRefresh: () async {
-                context.read<HomeFeedBloc>().add(LoadPostsRequested());
-              },
-              child: CustomScrollView(
-                slivers: [
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _GreetingText(userName: 'Mohamed'),
-                          SizedBox(height: 16),
-                          _SearchBar(),
-                          SizedBox(height: 16),
-                          _CreatePostCard(userName: 'Mohamed'),
-                          SizedBox(height: 16),
-                        ],
-                      ),
+
+          return state.getPostsState == RequestState.loading
+              ? const Center(child: CircularProgressIndicator())
+              : Scaffold(
+                  backgroundColor: const Color(0xFFF5F6F8),
+                  appBar: _HomeAppBar(user?.imageUrl ?? ''),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {},
+                    backgroundColor:ColorsManager.secondary,
+                    elevation: 2,
+                    child: const Icon(Icons.add, color: Colors.white, size: 30),
+                  ),
+
+                  body: RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<HomeFeedBloc>().add(LoadPostsRequested());
+                    },
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _GreetingText(
+                                  userName: user?.fullName ?? 'User',
+                                ),
+                                SizedBox(height: 16),
+                                _SearchBar(),
+                                SizedBox(height: 16),
+                                _CreatePostCard(
+                                  userName: user?.fullName ?? 'User',
+                                  imageUrl: user?.imageUrl ?? '',
+                                ),
+                                SizedBox(height: 16),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (posts == null || posts.isEmpty)
+                          const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(child: Text('No posts yet')),
+                          )
+                        else
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) => PostCard(post: posts[index]),
+                              childCount: posts.length,
+                            ),
+                          ),
+                        const SliverToBoxAdapter(child: SizedBox(height: 90)),
+                      ],
                     ),
                   ),
-                  if (posts == null || posts.isEmpty)
-                    const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: Text('No posts yet')),
-                    )
-                  else
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => PostCard(post: posts[index]),
-                        childCount: posts.length,
-                      ),
-                    ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 90)),
-                ],
-              ),
-            ),
-          );
+                );
         },
       ),
     );
@@ -80,7 +91,8 @@ class HomePage extends StatelessWidget {
 // Top app bar: user avatar - "</> Dev Connected" logo - notification bell
 // ---------------------------------------------------------------------------
 class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _HomeAppBar();
+  const _HomeAppBar(this.imageUrl);
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +102,12 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       titleSpacing: 16,
       leadingWidth: 56,
-      leading: const Padding(
+      leading: Padding(
         padding: EdgeInsets.only(left: 16),
         child: CircleAvatar(
           radius: 18,
           backgroundColor: Color(0xFFD9D9D9),
-          backgroundImage: AssetImage('assets/images/profile_defult.jpg'),
+          backgroundImage: NetworkImage(imageUrl),
         ),
       ),
       title: Row(
@@ -104,7 +116,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: const Color(0xFF3B82F6),
+              color: ColorsManager.secondary,
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -156,15 +168,12 @@ class _GreetingText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: const TextStyle(
-          fontSize: 26,
+          fontSize: 22,
           fontWeight: FontWeight.w800,
           color: Colors.black,
           height: 1.25,
         ),
-        children: [
-          const TextSpan(text: 'Good Morning 👋, '),
-          TextSpan(text: 'Welcome back, $userName'),
-        ],
+        children: [TextSpan(text: 'Welcome back, $userName 👋')],
       ),
     );
   }
@@ -199,8 +208,9 @@ class _SearchBar extends StatelessWidget {
 // "Create Post" card
 // ---------------------------------------------------------------------------
 class _CreatePostCard extends StatelessWidget {
+  final String imageUrl;
   final String userName;
-  const _CreatePostCard({required this.userName});
+  const _CreatePostCard({required this.userName, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -232,10 +242,10 @@ class _CreatePostCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 20,
                 backgroundColor: Color(0xFFD9D9D9),
-                backgroundImage: AssetImage('assets/images/profile_defult.jpg'),
+                backgroundImage: NetworkImage(imageUrl),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -283,120 +293,6 @@ class _CreatePostCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Bottom navigation bar
-// ---------------------------------------------------------------------------
-class _HomeBottomNavBar extends StatelessWidget {
-  const _HomeBottomNavBar();
-
-  @override
-  Widget build(BuildContext context) {
-    const activeColor = Color(0xFF3B82F6);
-    const inactiveColor = Colors.grey;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              _NavBarItem(
-                icon: Icons.home_rounded,
-                label: 'Home',
-                isActive: true,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-              ),
-              _NavBarItem(
-                icon: Icons.explore_outlined,
-                label: 'Explore',
-                isActive: false,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-              ),
-              _NavBarItem(
-                icon: Icons.add_circle_outline,
-                label: 'Create',
-                isActive: false,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-              ),
-              _NavBarItem(
-                icon: Icons.mail_outline_rounded,
-                label: 'Messages',
-                isActive: false,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-              ),
-              _NavBarItem(
-                icon: Icons.person_outline_rounded,
-                label: 'Profile',
-                isActive: false,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavBarItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isActive;
-  final Color activeColor;
-  final Color inactiveColor;
-
-  const _NavBarItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    required this.activeColor,
-    required this.inactiveColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = isActive ? activeColor : inactiveColor;
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

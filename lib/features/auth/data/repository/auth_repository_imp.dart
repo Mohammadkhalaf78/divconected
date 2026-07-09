@@ -14,7 +14,7 @@ class AuthRepositoryImp implements BaseAuthRepository {
   AuthRepositoryImp({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, UserEntity>> forgetPassword(String email)async {
+  Future<Either<Failure, void>> forgetPassword(String email)async {
     try {
       final result = await remoteDataSource.forgotPassword(ForgotPasswordParams(email: email));
       return Right(result);

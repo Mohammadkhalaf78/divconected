@@ -4,7 +4,7 @@ import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/profile/domain/use_case/paramas/updata_profile_params.dart';
 import 'package:dev_connected/features/profile/presntation/bloc/profile_bloc.dart';
-import 'package:dev_connected/features/profile/presntation/screens/update_profile_success_screen.dart';
+import 'package:dev_connected/features/profile/presntation/screens/profile_screen/widgets/update_profile_success_screen.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

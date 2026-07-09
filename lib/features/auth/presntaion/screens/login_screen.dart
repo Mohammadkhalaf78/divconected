@@ -7,7 +7,7 @@ import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/fotgot_password_screen.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/register_screen.dart';
-import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
+import 'package:dev_connected/features/main/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,7 +30,9 @@ class LoginScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>  ProfileViewScreen(),
+                builder: (context) =>  MainScreen(
+                  userEntity: state.currentUser,
+                ),
               ),
             );
           } else if (state.signInWithGoogleState == RequestState.error) {
@@ -46,7 +48,9 @@ class LoginScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>  ProfileViewScreen(),
+                builder: (context) =>  MainScreen(
+                  userEntity: state.currentUser,
+                ),
               ),
             );
           } else if (state.signInWithGoogleState == RequestState.loading) {

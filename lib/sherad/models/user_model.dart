@@ -12,6 +12,7 @@ class UserModel extends UserEntity {
     required super.phone,
     required super.createdAt,
     required super.bio,
+    required super.imageUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +27,7 @@ class UserModel extends UserEntity {
       'role': role.name,
       'phone': phone,
       'createdAt': createdAt,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -45,6 +47,7 @@ class UserModel extends UserEntity {
 
       phone: map['phone'],
       createdAt: map['createdAt'],
+      imageUrl: map['imageUrl'],
     );
   }
 }

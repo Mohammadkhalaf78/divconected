@@ -11,7 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 abstract class BaseAuthRemoteDataSource {
   Future<UserModel> signIn(LoginParams params);
   Future<UserModel> register(RegisterParams params);
-  Future<UserModel> forgotPassword(ForgotPasswordParams params);
+  Future<void> forgotPassword(ForgotPasswordParams params);
   Future<UserModel> signInWithGoogle();
   Future<void> logOut();
 }
@@ -30,17 +30,16 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
       if (credentials.user == null) {
         throw const ServerException('User not found');
       }
-      return UserModel(
-        id: credentials.user!.uid,
-        email: credentials.user!.email ?? '',
-        fullName: '',
-        userName: '',
-        isEmailVerified: credentials.user!.emailVerified,
-        role: UserRole.company,
-        phone: '',
-        createdAt: '',
-        bio: '',
-      );
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(credentials.user!.uid)
+          .get();
+
+      if (!doc.exists) {
+        throw const ServerException('User data not found');
+      }
+
+      return UserModel.fromMap(doc.data()!);
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
@@ -69,6 +68,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         phone: params.phone,
         createdAt: params.createdAt,
         bio: '',
+        imageUrl: '',
       );
 
       await FirebaseFirestore.instance
@@ -83,21 +83,9 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> forgotPassword(ForgotPasswordParams params) async {
+  Future<void> forgotPassword(ForgotPasswordParams params) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: params.email);
-
-      return UserModel(
-        id: '',
-        email: '',
-        isEmailVerified: true,
-        role: UserRole.company,
-        fullName: '',
-        userName: '',
-        phone: '',
-        createdAt: '',
-        bio: '',
-      );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
@@ -139,6 +127,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         phone: '',
         createdAt: '',
         bio: '',
+        imageUrl: user.photoURL ?? '',
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
