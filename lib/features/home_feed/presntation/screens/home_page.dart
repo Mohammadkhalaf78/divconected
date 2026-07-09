@@ -3,6 +3,7 @@ import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/home_feed/presntation/bloc/home_feed_bloc.dart';
+import 'package:dev_connected/features/home_feed/presntation/screens/create_post_page.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/post_card.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,14 @@ class HomePage extends StatelessWidget {
                   backgroundColor: const Color(0xFFF5F6F8),
                   appBar: _HomeAppBar(user?.imageUrl ?? ''),
                   floatingActionButton: FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreatePostPage(user: user),
+                        ),
+                      );
+                    },
                     backgroundColor:ColorsManager.secondary,
                     elevation: 2,
                     child: const Icon(Icons.add, color: Colors.white, size: 30),
