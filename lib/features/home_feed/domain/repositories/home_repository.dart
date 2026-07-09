@@ -1,0 +1,7 @@
+import 'package:dartz/dartz.dart';
+import 'package:dev_connected/core/network/failures.dart';
+import 'package:dev_connected/features/home_feed/domain/entites/posts_model.dart';
+
+abstract class BaseHomeRepository {
+  Future<Either<Failure, List<PostEntities>>> getPosts();
+}

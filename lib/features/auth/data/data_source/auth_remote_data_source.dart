@@ -86,7 +86,6 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
   Future<UserModel> forgotPassword(ForgotPasswordParams params) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: params.email);
-      print("Password reset email sent");
 
       return UserModel(
         id: '',
@@ -100,8 +99,6 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         bio: '',
       );
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      print(e.message);
       throw ServerException(e.message ?? 'An error occurred');
     }
   }
