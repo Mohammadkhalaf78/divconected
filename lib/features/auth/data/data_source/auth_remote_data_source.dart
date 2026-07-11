@@ -117,18 +117,35 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         throw const ServerException('User not found');
       }
 
-      return UserModel(
-        id: user.uid,
-        email: user.email ?? '',
-        fullName: user.displayName ?? '',
-        userName: '',
-        isEmailVerified: user.emailVerified,
-        role: UserRole.company,
-        phone: '',
-        createdAt: '',
-        bio: '',
-        imageUrl: user.photoURL ?? '',
-      );
+      final userDoc = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid);
+
+      final snapshot = await userDoc.get();
+
+      if (!snapshot.exists) {
+        final userModel = UserModel(
+          id: user.uid,
+          email: user.email ?? '',
+          fullName: user.displayName ?? '',
+          userName: '',
+          isEmailVerified: user.emailVerified,
+          role: UserRole.company,
+          phone: '',
+          createdAt: DateTime.now().toIso8601String(),
+          bio: '',
+          imageUrl: user.photoURL ?? '',
+        );
+
+        await userDoc.set(userModel.toMap());
+      } else {
+        await userDoc.set({
+          'imageUrl': user.photoURL ?? '',
+          'email': user.email ?? '',
+        }, SetOptions(merge: true));
+      }
+
+      return UserModel.fromMap((await userDoc.get()).data()!);
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }

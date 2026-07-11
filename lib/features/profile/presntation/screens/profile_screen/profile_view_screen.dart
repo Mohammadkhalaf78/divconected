@@ -42,7 +42,7 @@ class ProfileViewScreen extends StatelessWidget {
               DateTime.tryParse(userProfile?.createdAt ?? '') ?? DateTime.now();
           final joinedDate = DateFormat('dd MMM yyyy').format(createdAt);
 
-      return    state.profileState == RequestState.loading
+          return state.profileState == RequestState.loading
               ? const Center(child: CircularProgressIndicator())
               : Scaffold(
                   backgroundColor: ColorsManager.white,
@@ -91,7 +91,8 @@ class ProfileViewScreen extends StatelessWidget {
                                 radius: 45,
                                 // e.g. CircleAvatar(backgroundImage: NetworkImage(user.avatarUrl))
                                 backgroundImage: NetworkImage(
-                                  'https://imgcdn.stablediffusionweb.com/2024/10/10/dfbf7741-3f6f-478d-b658-f7454c72f33a.jpg',
+                                  userProfile?.imageUrl ?? 'https://www.gravatar.com/avatar/placeholder'
+                                    ,
                                 ),
                               ),
                               Positioned(
@@ -325,8 +326,6 @@ class ProfileViewScreen extends StatelessWidget {
                     ),
                   ),
                 );
-      
-         
         },
       ),
     );

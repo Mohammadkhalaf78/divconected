@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeFeedBloc(sl())..add(LoadPostsRequested()),
+      create: (context) => HomeFeedBloc(sl(), sl(),sl())..add(LoadPostsRequested()),
       child: BlocConsumer<HomeFeedBloc, HomeFeedState>(
         listener: (context, state) {
           if (state.getPostsState == RequestState.error) {
@@ -36,11 +36,14 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreatePostPage(user: user),
+                          builder: (_) => BlocProvider.value(
+                            value: context.read<HomeFeedBloc>(),
+                            child: CreatePostPage(user: user),
+                          ),
                         ),
                       );
                     },
-                    backgroundColor:ColorsManager.secondary,
+                    backgroundColor: ColorsManager.secondary,
                     elevation: 2,
                     child: const Icon(Icons.add, color: Colors.white, size: 30),
                   ),
@@ -58,7 +61,8 @@ class HomePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _GreetingText(
-                                  userName: user?.fullName ?? 'User',
+                                  userName:
+                                      user?.fullName.split(' ').first ?? 'User',
                                 ),
                                 SizedBox(height: 16),
                                 _SearchBar(),
@@ -115,7 +119,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: CircleAvatar(
           radius: 18,
           backgroundColor: Color(0xFFD9D9D9),
-          backgroundImage: NetworkImage(imageUrl),
+          backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
         ),
       ),
       title: Row(
@@ -253,7 +257,9 @@ class _CreatePostCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Color(0xFFD9D9D9),
-                backgroundImage: NetworkImage(imageUrl),
+                backgroundImage: imageUrl.isNotEmpty
+                    ? NetworkImage(imageUrl)
+                    : null,
               ),
               const SizedBox(width: 10),
               Expanded(

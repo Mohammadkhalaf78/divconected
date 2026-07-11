@@ -1,124 +1,194 @@
+import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
+import 'package:dev_connected/core/enums/enum.dart';
+import 'package:dev_connected/features/home_feed/presntation/bloc/home_feed_bloc.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePostPage extends StatelessWidget {
   final UserEntity? user;
-  const CreatePostPage({super.key, this.user});
+  final TextEditingController postContentController = TextEditingController();
+  final TextEditingController postImageController = TextEditingController();
+  CreatePostPage({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsManager.white,
+    return BlocConsumer<HomeFeedBloc, HomeFeedState>(
+      listener: (context, state) {
+        if (state.createPostState == RequestState.loaded) {
+          AppTopSnackBar.success(
+            context,
+            message: 'Post created successfully!',
+          );
 
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
+          Navigator.pop(context);
+        } else if (state.createPostState == RequestState.error) {
+          AppTopSnackBar.error(context, message: state.createPostMessage);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: ColorsManager.white,
 
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: ColorsManager.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            centerTitle: false,
 
-        title: const Text(
-          "Create Post",
-          style: TextStyle(
-            color: ColorsManager.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorsManager.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () {},
-
-              child: const Text(
-                "Post",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// User Info
-            const UserHeader(),
-
-            const SizedBox(height: 20),
-
-            /// Post Text Field
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-
-              child: const TextField(
-                maxLines: 6,
-
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-
-                  hintText:
-                      "Share your coding journey...\n"
-                      "Talk about your projects, ideas or experience",
-
-                  hintStyle: TextStyle(color: ColorsManager.grey, height: 1.5),
-                ),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: ColorsManager.black,
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
 
-            const SizedBox(height: 20),
-
-            /// Image Picker
-            const ImagePickerCard(),
-
-            const SizedBox(height: 20),
-
-            /// Attachment Title
-            const Text(
-              "Add to your post",
+            title: const Text(
+              "Create Post",
               style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
                 color: ColorsManager.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
               ),
             ),
 
-            const SizedBox(height: 12),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorsManager.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    // Handle post creation logic here
+                    context.read<HomeFeedBloc>().add(
+                      CreatePostRequested(
+                        postContent: postContentController.text,
+                        postImage: postImageController.text,
+                        userImage: user?.imageUrl,
+                        userName: user?.fullName ?? 'User',
+                      ),
+                    );
+                  },
 
-            /// Actions
-            const PostActions(),
-          ],
-        ),
-      ),
+                  child: const Text(
+                    "Post",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// User Info
+                UserHeader(user: user),
+
+                const SizedBox(height: 20),
+
+                /// Post Text Field
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+
+                  child: TextField(
+                    maxLines: 6,
+                    controller: postContentController,
+
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+
+                      hintText:
+                          "Share your coding journey...\n"
+                          "Talk about your projects, ideas or experience",
+
+                      hintStyle: TextStyle(
+                        color: ColorsManager.grey,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                /// Image Picker
+                const ImagePickerCard(),
+
+                const SizedBox(height: 20),
+                /// Image URL Text Field
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+
+                  child: TextField(
+                    controller: postImageController,
+
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+
+                      hintText:
+                          "Enter image URL for your post (optional)",
+
+                      hintStyle: TextStyle(
+                        color: ColorsManager.grey,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                /// Attachment Title
+                const Text(
+                  "Add to your post",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    color: ColorsManager.black,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                /// Actions
+                const PostActions(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -148,7 +218,8 @@ class UserHeader extends StatelessWidget {
               radius: 24,
               backgroundColor: Colors.white,
               backgroundImage: NetworkImage(
-                user?.imageUrl ?? 'https://imgcdn.stablediffusionweb.com/2024/10/10/dfbf7741-3f6f-478d-b658-f7454c72f33a.jpg',
+                user?.imageUrl ??
+                    'https://imgcdn.stablediffusionweb.com/2024/10/10/dfbf7741-3f6f-478d-b658-f7454c72f33a.jpg',
               ),
             ),
           ),
@@ -192,11 +263,13 @@ class ImagePickerCard extends StatelessWidget {
       width: double.infinity,
 
       decoration: BoxDecoration(
-        color: ColorsManager.primary.withOpacity(.05),
+        color: ColorsManager.primary.withAlpha((.05 * 255).round()),
 
         borderRadius: BorderRadius.circular(16),
 
-        border: Border.all(color: ColorsManager.primary.withOpacity(.2)),
+        border: Border.all(
+          color: ColorsManager.primary.withAlpha((.2 * 255).round()),
+        ),
       ),
 
       child: Column(
@@ -208,7 +281,7 @@ class ImagePickerCard extends StatelessWidget {
             height: 55,
 
             decoration: BoxDecoration(
-              color: ColorsManager.primary.withOpacity(.1),
+              color: ColorsManager.primary.withAlpha((.1 * 255).round()),
 
               shape: BoxShape.circle,
             ),
@@ -313,7 +386,7 @@ class PostActionItem extends StatelessWidget {
           height: 42,
 
           decoration: BoxDecoration(
-            color: color.withOpacity(.12),
+            color: color.withAlpha((.12 * 255).round()),
 
             shape: BoxShape.circle,
           ),

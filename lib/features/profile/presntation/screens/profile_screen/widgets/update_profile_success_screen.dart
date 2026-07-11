@@ -1,5 +1,4 @@
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
-import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
 import 'package:flutter/material.dart';
 
 const Color kPrimaryPurple = Color(0xFF6C63FF);
@@ -55,13 +54,9 @@ class UpdateProfileSuccessScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context); // Close the success screen
                     // Handle back to profile button press
-                      Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  ProfileViewScreen(),
-              ),
-            );
+                  
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kPrimaryPurple,

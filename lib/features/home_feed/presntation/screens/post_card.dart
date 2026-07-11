@@ -1,13 +1,13 @@
+import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/features/home_feed/domain/entites/posts_model.dart';
+import 'package:dev_connected/features/home_feed/presntation/screens/home_page/widgets/menu_button.dart';
 import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
 
 class PostCard extends StatelessWidget {
   final PostEntities post;
 
-  const PostCard({
-    super.key,
-    required this.post,
-  });
+  const PostCard({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +15,7 @@ class PostCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
@@ -38,15 +35,13 @@ class PostCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             _buildHeader(context),
 
             const SizedBox(height: 16),
 
             _buildPostContent(context),
 
-            if (post.imageUrl != null &&
-                post.imageUrl!.isNotEmpty) ...[
+            if (post.imageUrl != null && post.imageUrl!.isNotEmpty) ...[
               const SizedBox(height: 14),
               _buildPostImage(),
             ],
@@ -57,9 +52,7 @@ class PostCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            Divider(
-              color: colorScheme.outlineVariant,
-            ),
+            Divider(color: colorScheme.outlineVariant),
 
             _buildActions(context),
           ],
@@ -68,388 +61,225 @@ class PostCard extends StatelessWidget {
     );
   }
 
-
   Widget _buildHeader(BuildContext context) {
-
     final theme = Theme.of(context);
 
     return Row(
       children: [
-
         CircleAvatar(
           radius: 24,
 
-          backgroundImage:
-          post.userImage.isNotEmpty
+          backgroundImage: post.userImage.isNotEmpty
               ? NetworkImage(post.userImage)
               : null,
 
-          child:
-          post.userImage.isEmpty
+          child: post.userImage.isEmpty
               ? Text(
-            _getInitials(post.userName),
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          )
+                  _getInitials(post.userName),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
               : null,
         ),
 
-
         const SizedBox(width: 12),
-
 
         Expanded(
           child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-
               Text(
                 post.userName,
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(
-                  fontWeight:
-                  FontWeight.w700,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
               ),
 
-
               const SizedBox(height: 3),
-
 
               Row(
                 children: [
-
                   Text(
                     "Developer",
-                    style: theme
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                      color: theme
-                          .colorScheme
-                          .primary,
-                      fontWeight:
-                      FontWeight.w600,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-
 
                   const SizedBox(width: 6),
 
-
                   Text(
                     "• ${_formatDate()}",
-                    style: theme
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                      color: theme
-                          .colorScheme
-                          .onSurfaceVariant,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-
                 ],
               ),
-
             ],
           ),
         ),
 
+        MenuButton(
+          // Pass any necessary parameters to the MenuButton if needed
+          postId: post.id, // Assuming the PostEntities has an 'id' field
 
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.more_vert,
-          ),
-        )
-
-      ],
+        ),
+      ],  
     );
   }
 
-
-
-  Widget _buildPostContent(BuildContext context){
-
-    final theme = Theme.of(context);
-
-
+  Widget _buildPostContent(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-      CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-
-        Text(
-          post.title,
-          style: theme
-              .textTheme
-              .titleMedium
-              ?.copyWith(
-            fontWeight:
-            FontWeight.bold,
-          ),
-        ),
-
-
-        const SizedBox(height: 8),
-
-
-        Text(
+        ReadMoreText(
           post.content,
-          style: theme
-              .textTheme
-              .bodyMedium
-              ?.copyWith(
+          trimLines: 3,
+          trimMode: TrimMode.Line,
+          trimCollapsedText: ' Show more',
+          trimExpandedText: ' Show less',
+          style: const TextStyle(
+            fontSize: 15,
+            color: Colors.black,
             height: 1.5,
           ),
+          moreStyle: const TextStyle(
+            color: ColorsManager.primary,
+            fontWeight: FontWeight.bold,
+          ),
+          lessStyle: const TextStyle(
+            color: ColorsManager.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-
+        const SizedBox(height: 8),
       ],
     );
   }
 
-
-
-  Widget _buildPostImage(){
-
+  Widget _buildPostImage() {
     return ClipRRect(
-
-      borderRadius:
-      BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(14),
 
       child: Image.network(
-
         post.imageUrl!,
 
-        width:
-        double.infinity,
+        width: double.infinity,
 
-        height:
-        220,
+        height: 220,
 
-        fit:
-        BoxFit.cover,
+        fit: BoxFit.cover,
 
-        errorBuilder:
-            (context,error,stack){
-
+        errorBuilder: (context, error, stack) {
           return Container(
-            height:220,
+            height: 220,
             color: Colors.grey.shade200,
-            child: const Icon(
-              Icons.image_not_supported,
-            ),
+            child: const Icon(Icons.image_not_supported),
           );
-
         },
-
       ),
     );
   }
 
-
-
-
-  Widget _buildStats(BuildContext context){
-
-    final theme =
-    Theme.of(context);
-
+  Widget _buildStats(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Row(
-
       children: [
-
-        if(post.likesCount > 0)
-
+        if (post.likesCount > 0)
           Row(
             children: [
+              Icon(Icons.favorite, size: 16, color: theme.colorScheme.primary),
 
-              Icon(
-                Icons.favorite,
-                size:16,
-                color:
-                theme.colorScheme.primary,
-              ),
+              const SizedBox(width: 4),
 
-              const SizedBox(width:4),
-
-              Text(
-                "${post.likesCount}",
-                style:
-                theme.textTheme.bodySmall,
-              ),
-
+              Text("${post.likesCount}", style: theme.textTheme.bodySmall),
             ],
           ),
 
-
         const Spacer(),
 
-
-        if(post.commentsCount >0)
-
+        if (post.commentsCount > 0)
           Text(
             "${post.commentsCount} comments",
-            style:
-            theme.textTheme.bodySmall,
-          )
-
+            style: theme.textTheme.bodySmall,
+          ),
       ],
     );
   }
 
-
-
-
-  Widget _buildActions(BuildContext context){
-
-
-
+  Widget _buildActions(BuildContext context) {
     return Row(
-
-      mainAxisAlignment:
-      MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
 
       children: [
+        _ActionButton(icon: Icons.thumb_up_alt_outlined, text: "Like"),
 
-        _ActionButton(
-          icon:
-          Icons.thumb_up_alt_outlined,
-          text:
-          "Like",
-        ),
+        _ActionButton(icon: Icons.mode_comment_outlined, text: "Comment"),
 
-
-        _ActionButton(
-          icon:
-          Icons.mode_comment_outlined,
-          text:
-          "Comment",
-        ),
-
-
-        _ActionButton(
-          icon:
-          Icons.share_outlined,
-          text:
-          "Share",
-        ),
-
+        _ActionButton(icon: Icons.share_outlined, text: "Share"),
       ],
     );
   }
 
+  String _getInitials(String name) {
+    final words = name.split(" ");
 
-
-  String _getInitials(String name){
-
-    final words =
-    name.split(" ");
-
-    if(words.length ==1){
+    if (words.length == 1) {
       return words[0][0].toUpperCase();
     }
 
-    return
-      "${words[0][0]}${words[1][0]}"
-          .toUpperCase();
-
+    return "${words[0][0]}${words[1][0]}".toUpperCase();
   }
 
+  String _formatDate() {
+    final diff = DateTime.now().difference(post.createdAt);
 
-  String _formatDate(){
-
-    final diff =
-    DateTime.now()
-        .difference(post.createdAt);
-
-
-    if(diff.inMinutes <60){
+    if (diff.inMinutes < 60) {
       return "${diff.inMinutes}m ago";
     }
 
-
-    if(diff.inHours <24){
+    if (diff.inHours < 24) {
       return "${diff.inHours}h ago";
     }
 
-
     return "${diff.inDays}d ago";
-
   }
-
 }
 
-
-
-
 class _ActionButton extends StatelessWidget {
-
   final IconData icon;
   final String text;
 
-
-  const _ActionButton({
-    required this.icon,
-    required this.text,
-  });
-
+  const _ActionButton({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
-
-    final theme =
-    Theme.of(context);
-
+    final theme = Theme.of(context);
 
     return InkWell(
-
-      borderRadius:
-      BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(10),
 
       onTap: () {},
 
-
       child: Padding(
-
-        padding:
-        const EdgeInsets.symmetric(
-          vertical:8,
-          horizontal:12,
-        ),
-
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
 
         child: Row(
-
           children: [
+            Icon(icon, size: 20, color: theme.colorScheme.primary),
 
-            Icon(
-              icon,
-              size:20,
-              color:
-              theme.colorScheme.primary,
-            ),
-
-
-            const SizedBox(width:6),
-
+            const SizedBox(width: 6),
 
             Text(
               text,
-              style:
-              theme.textTheme.bodySmall
-                  ?.copyWith(
-                fontWeight:
-                FontWeight.w600,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-            )
-
+            ),
           ],
         ),
       ),
