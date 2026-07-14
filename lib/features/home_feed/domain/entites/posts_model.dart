@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class PostEntities extends Equatable {
+ class PostEntities extends Equatable {
   final String id;
   final String userId;
   final String userName;
@@ -11,6 +11,7 @@ abstract class PostEntities extends Equatable {
   final DateTime createdAt;
   final int likesCount;
   final int commentsCount;
+  final List<String> likedBy; 
 
   const PostEntities({
 
@@ -24,7 +25,36 @@ abstract class PostEntities extends Equatable {
     required this.createdAt,
     required this.likesCount,
     required this.commentsCount,
+    required this.likedBy,
   });
+
+  PostEntities copyWith({
+    String? id,
+    String? userId,
+    String? userName,
+    String? userImage,
+    String? title,
+    String? content,
+    String? imageUrl,
+    DateTime? createdAt,
+    int? likesCount,
+    int? commentsCount,
+    List<String>? likedBy, 
+  }) {
+    return PostEntities(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userImage: userImage ?? this.userImage,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      imageUrl: imageUrl ?? this.imageUrl,
+      createdAt: createdAt ?? this.createdAt,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      likedBy: likedBy ?? this.likedBy, 
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -38,5 +68,6 @@ abstract class PostEntities extends Equatable {
     createdAt,
     likesCount,
     commentsCount,
+    likedBy,
   ];
 }

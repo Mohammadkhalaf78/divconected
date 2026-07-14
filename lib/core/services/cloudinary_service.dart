@@ -7,8 +7,8 @@ class CloudinaryService {
 
   CloudinaryService(this.dio);
 
-  static const String cloudName = "I90fhrid";
-  static const String uploadPreset = "divconnected";
+  static const String cloudName = "l90fhrid";
+  static const String uploadPreset = "devconnected";
 
   Future<String> uploadImage(File image) async {
     final url = "https://api.cloudinary.com/v1_1/$cloudName/image/upload";

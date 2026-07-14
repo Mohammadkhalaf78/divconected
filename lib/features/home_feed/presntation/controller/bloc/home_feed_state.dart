@@ -6,9 +6,11 @@ class HomeFeedState extends Equatable {
     this.getPostsMessage = '',
     this.createPostMessage = '',
     this.deletePostMessage = '',
+    this.toggleLikeMessage = '',
     this.getPostsState = RequestState.inital,
     this.createPostState = RequestState.inital,
     this.deletePostState = RequestState.inital,
+    this.toggleLikeState = RequestState.inital,
   });
 
   // data is success
@@ -17,10 +19,12 @@ class HomeFeedState extends Equatable {
   final String getPostsMessage;
   final String createPostMessage;
   final String deletePostMessage;
+  final String toggleLikeMessage;
   // states data
   final RequestState getPostsState;
   final RequestState createPostState;
   final RequestState  deletePostState ;
+  final RequestState toggleLikeState;
 
   @override
   List<Object> get props => [
@@ -31,6 +35,8 @@ class HomeFeedState extends Equatable {
     createPostState,
     deletePostMessage,
     deletePostState,
+    toggleLikeMessage,
+    toggleLikeState
   ];
 
   HomeFeedState copyWith({
@@ -41,6 +47,8 @@ class HomeFeedState extends Equatable {
     RequestState? getPostsState,
     String? deletePostMessage,
     RequestState? deletePostState,
+    String? toggleLikeMessage,
+    RequestState? toggleLikeState,
   }) {
     return HomeFeedState(
       currentPosts: currentPosts ?? this.currentPosts,
@@ -50,6 +58,8 @@ class HomeFeedState extends Equatable {
       getPostsState: getPostsState ?? this.getPostsState,
       deletePostMessage: deletePostMessage ?? this.deletePostMessage,
       deletePostState: deletePostState ?? this.deletePostState,
+      toggleLikeMessage: toggleLikeMessage ?? this.toggleLikeMessage,
+      toggleLikeState: toggleLikeState ?? this.toggleLikeState
     );
   }
 }

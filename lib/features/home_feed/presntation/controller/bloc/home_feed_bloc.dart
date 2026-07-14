@@ -4,6 +4,8 @@ import 'package:dev_connected/features/home_feed/domain/usecases/create_post_use
 import 'package:dev_connected/features/home_feed/domain/usecases/delete_post_usecase.dart';
 import 'package:dev_connected/features/home_feed/domain/usecases/get_posts_usecase.dart';
 import 'package:dev_connected/features/home_feed/domain/usecases/params/create_post_param.dart';
+import 'package:dev_connected/features/home_feed/domain/usecases/params/like_params.dart';
+import 'package:dev_connected/features/home_feed/domain/usecases/toggle_like_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +16,9 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
   final GetPostsUsecase getPostsUsecase;
   final CreatePostUseCase createPostUsecase;
   final DeletePostUsecase deletePostUsecase;
+  final ToggleLikeUseCase toggleLikeUsecase;
   HomeFeedBloc(
+    this.toggleLikeUsecase,
     this.getPostsUsecase,
     this.createPostUsecase,
     this.deletePostUsecase,
@@ -22,6 +26,7 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
     on<LoadPostsRequested>(_getPosts);
     on<CreatePostRequested>(_createPost);
     on<DeletePostRequested>(_deletePost);
+    on<ToggleLikeRequested>(_toggleLike);
   }
 
   Future<void> _getPosts(
@@ -88,6 +93,52 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
         ),
       ),
       (r) => emit(state.copyWith(deletePostState: RequestState.loaded)),
+    );
+  }
+
+  Future<void> _toggleLike(
+    ToggleLikeRequested event,
+    Emitter<HomeFeedState> emit,
+  ) async {
+
+    // Optimistically update the UI by toggling the like state locally
+    final updatedPosts = state.currentPosts!.map((post) {
+      if (post.id == event.postId) {
+        final likedBy = List<String>.from(post.likedBy);
+
+        int likesCount = post.likesCount;
+
+        if (likedBy.contains(event.userId)) {
+          likedBy.remove(event.userId);
+          likesCount--;
+        } else {
+          likedBy.add(event.userId);
+          likesCount++;
+        }
+
+        return post.copyWith(likedBy: likedBy, likesCount: likesCount);
+      }
+
+      return post;
+    }).toList();
+
+    emit(state.copyWith(currentPosts: updatedPosts));
+
+    final result = await toggleLikeUsecase(
+      LikeParams(postId: event.postId, userId: event.userId),
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          toggleLikeState: RequestState.error,
+          toggleLikeMessage: failure.message,
+        ),
+      ),
+      (r) async {
+        emit(state.copyWith());
+
+      },
     );
   }
 }

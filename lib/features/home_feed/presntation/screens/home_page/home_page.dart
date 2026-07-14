@@ -2,9 +2,10 @@ import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
-import 'package:dev_connected/features/home_feed/presntation/bloc/home_feed_bloc.dart';
+import 'package:dev_connected/features/home_feed/presntation/controller/bloc/home_feed_bloc.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/create_post_page.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/post_card.dart';
+import 'package:dev_connected/features/main/ipload_image/cubit/upload_cubit.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeFeedBloc(sl(), sl(),sl())..add(LoadPostsRequested()),
+      create: (context) =>
+          HomeFeedBloc(sl(), sl(), sl(), sl())..add(LoadPostsRequested()),
       child: BlocConsumer<HomeFeedBloc, HomeFeedState>(
         listener: (context, state) {
           if (state.getPostsState == RequestState.error) {
@@ -36,8 +38,13 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                            value: context.read<HomeFeedBloc>(),
+                          builder: (_) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider.value(
+                                value: context.read<HomeFeedBloc>(),
+                              ),
+                              BlocProvider(create: (_) => UploadCubit(sl())),
+                            ],
                             child: CreatePostPage(user: user),
                           ),
                         ),
@@ -84,8 +91,9 @@ class HomePage extends StatelessWidget {
                         else
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
-                              (context, index) => PostCard(post: posts[index]),
-                              childCount: posts.length,
+                              (context, index) =>
+                                  PostCard(post: state.currentPosts![index], user: user!,),
+                              childCount: state.currentPosts!.length,
                             ),
                           ),
                         const SliverToBoxAdapter(child: SizedBox(height: 90)),

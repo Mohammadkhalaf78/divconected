@@ -36,3 +36,13 @@ class DeletePostRequested extends HomeFeedEvent {
   @override
   List<Object> get props => [postId];
 }
+
+class ToggleLikeRequested extends HomeFeedEvent {
+  final String postId;
+  final String userId;
+
+  const ToggleLikeRequested({required this.postId, required this.userId});
+
+  @override
+  List<Object> get props => [postId, userId];
+}

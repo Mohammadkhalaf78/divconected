@@ -1,4 +1,4 @@
-import 'package:dev_connected/features/home_feed/presntation/bloc/home_feed_bloc.dart';
+import 'package:dev_connected/features/home_feed/presntation/controller/bloc/home_feed_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

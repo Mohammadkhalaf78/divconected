@@ -1,18 +1,29 @@
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
+import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/home_feed/domain/entites/posts_model.dart';
+import 'package:dev_connected/features/home_feed/presntation/controller/bloc/home_feed_bloc.dart';
+import 'package:dev_connected/features/home_feed/presntation/screens/comments_screen.dart/comment_screen.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/home_page/widgets/menu_button.dart';
+import 'package:dev_connected/sherad/entites/user_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
 
 class PostCard extends StatelessWidget {
   final PostEntities post;
+  final UserEntity user;  
 
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, required this.user});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final currentUserId = sl<FirebaseAuth>().currentUser?.uid;
+    // final currentPost = state.currentPosts!.firstWhere(
+    //   (element) => element.id == post.id,
+    // );
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -54,7 +65,45 @@ class PostCard extends StatelessWidget {
 
             Divider(color: colorScheme.outlineVariant),
 
-            _buildActions(context),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+              children: [
+                _ActionButton(
+                  icon: post.likedBy.contains(currentUserId)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  text: post.likedBy.contains(currentUserId) ? "Liked" : "Like",
+                  onPressed: () {
+                    // Handle like button press
+                    context.read<HomeFeedBloc>().add(
+                      ToggleLikeRequested(
+                        postId: post.id,
+                        userId: sl<FirebaseAuth>().currentUser!.uid,
+                        // Assuming the PostEntities has a 'userId' field
+                      ),
+                    );
+                  },
+                ),
+
+                _ActionButton(
+                  icon: Icons.mode_comment_outlined,
+                  text: "Comment",
+                  onPressed: () {
+                    // Handle comment button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                          CommentsScreen(postId: post.id, user: user,) ,
+                      ),
+                    );
+                  },
+                ),
+
+                _ActionButton(icon: Icons.share_outlined, text: "Share"),
+              ],
+            ),
           ],
         ),
       ),
@@ -100,7 +149,7 @@ class PostCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Developer",
+                    user.role.name,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -124,9 +173,8 @@ class PostCard extends StatelessWidget {
         MenuButton(
           // Pass any necessary parameters to the MenuButton if needed
           postId: post.id, // Assuming the PostEntities has an 'id' field
-
         ),
-      ],  
+      ],
     );
   }
 
@@ -211,20 +259,6 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-      children: [
-        _ActionButton(icon: Icons.thumb_up_alt_outlined, text: "Like"),
-
-        _ActionButton(icon: Icons.mode_comment_outlined, text: "Comment"),
-
-        _ActionButton(icon: Icons.share_outlined, text: "Share"),
-      ],
-    );
-  }
-
   String _getInitials(String name) {
     final words = name.split(" ");
 
@@ -253,8 +287,9 @@ class PostCard extends StatelessWidget {
 class _ActionButton extends StatelessWidget {
   final IconData icon;
   final String text;
+  final VoidCallback? onPressed;
 
-  const _ActionButton({required this.icon, required this.text});
+  const _ActionButton({required this.icon, required this.text, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +298,7 @@ class _ActionButton extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(10),
 
-      onTap: () {},
+      onTap: onPressed,
 
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

@@ -13,6 +13,7 @@ class PostModel extends PostEntities {
     required super.createdAt,
     required super.likesCount,
     required super.commentsCount,
+    required super.likedBy,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json, String id) {
@@ -27,6 +28,7 @@ class PostModel extends PostEntities {
       createdAt: (json['createdAt'] as Timestamp).toDate(),
       likesCount: json['likesCount'] ?? 0,
       commentsCount: json['commentsCount'] ?? 0,
+      likedBy: List<String>.from(json['likedBy'] ?? []),
     );
   }
 
@@ -42,6 +44,7 @@ class PostModel extends PostEntities {
       'createdAt': Timestamp.fromDate(createdAt),
       'likesCount': likesCount,
       'commentsCount': commentsCount,
+      'likedBy': likedBy,
     };
   }
 }
