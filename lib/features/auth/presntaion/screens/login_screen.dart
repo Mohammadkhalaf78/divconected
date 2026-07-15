@@ -6,8 +6,9 @@ import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/fotgot_password_screen.dart';
-import 'package:dev_connected/features/auth/presntaion/screens/register_screen.dart';
-import 'package:dev_connected/features/main/screens/main_screen.dart';
+import 'package:dev_connected/features/auth/presntaion/screens/role/role_screen.dart';
+import 'package:dev_connected/features/main/screens/company_screen.dart';
+import 'package:dev_connected/features/main/screens/developer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,14 +28,25 @@ class LoginScreen extends StatelessWidget {
           } else if (state.logInState == RequestState.loaded) {
             AppTopSnackBar.success(context, message: 'Login Successful');
 
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  MainScreen(
-                  userEntity: state.currentUser,
+            if (state.currentUser!.role == UserRole.company) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CompanyScreen(userEntity: state.currentUser),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DeveloperScreen(userEntity: state.currentUser),
+                ),
+              );
+            }
+
+          
           } else if (state.signInWithGoogleState == RequestState.error) {
             AppTopSnackBar.error(
               context,
@@ -45,14 +57,24 @@ class LoginScreen extends StatelessWidget {
               context,
               message: 'Login with Google Successful',
             );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  MainScreen(
-                  userEntity: state.currentUser,
+
+            if (state.currentUser!.role == UserRole.developer) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DeveloperScreen(userEntity: state.currentUser),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CompanyScreen(userEntity: state.currentUser),
+                ),
+              );
+            }
           } else if (state.signInWithGoogleState == RequestState.loading) {
             AppTopSnackBar.info(context, message: 'Logging in with Google...');
           }
@@ -269,7 +291,7 @@ class LoginScreen extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => RegisterScreen(),
+                                        builder: (context) => RoleScreen(),
                                       ),
                                     );
                                   },

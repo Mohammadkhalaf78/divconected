@@ -3,7 +3,7 @@ import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
 import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
-import 'package:dev_connected/features/main/screens/main_screen.dart';
+import 'package:dev_connected/features/main/screens/developer_screen.dart';
 import 'package:dev_connected/features/profile/domain/use_case/paramas/updata_profile_params.dart';
 import 'package:dev_connected/features/profile/presntation/bloc/profile_bloc.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
@@ -48,7 +48,7 @@ class EditProfileScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => MainScreen(userEntity: userProfile),
+                builder: (context) => DeveloperScreen(userEntity: userProfile),
               ),
             );
           } else if (state.updateProfileState == RequestState.error) {

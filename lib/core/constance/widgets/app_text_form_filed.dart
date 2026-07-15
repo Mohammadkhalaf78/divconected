@@ -8,6 +8,7 @@ class AppTextFormFiled extends StatelessWidget {
   final TextStyle? inputTextStyle;
   final TextStyle? hintStyle;
   final String hintText;
+  final Function(String)? onChanged;
   final bool? isObscureText;
   final Color? backGrgroundColor;
   final Widget? suffixIcons;
@@ -23,11 +24,14 @@ class AppTextFormFiled extends StatelessWidget {
     this.isObscureText,
     this.suffixIcons, this.backGrgroundColor,
     this.controller,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
+      
       controller: controller,
       decoration: InputDecoration(
         isDense: true,
@@ -66,4 +70,39 @@ class AppTextFormFiled extends StatelessWidget {
       )
     );
   }
+
+  
+}
+
+Future<void> showSelectionSheet({
+  required BuildContext context,
+  required String title,
+  required List<String> items,
+  required Function(String) onSelected,
+}) async {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(24),
+      ),
+    ),
+    builder: (_) {
+      return SafeArea(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: items.length,
+          itemBuilder: (_, index) {
+            return ListTile(
+              title: Text(items[index]),
+              onTap: () {
+                Navigator.pop(context);
+                onSelected(items[index]);
+              },
+            );
+          },
+        ),
+      );
+    },
+  );
 }

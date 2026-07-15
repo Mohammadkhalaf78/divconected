@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
               ? const Center(child: CircularProgressIndicator())
               : Scaffold(
                   backgroundColor: const Color(0xFFF5F6F8),
-                  appBar: _HomeAppBar(user?.imageUrl ?? ''),
+                  appBar: _HomeAppBar(user?.imageUrl),
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
                       Navigator.push(
@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
                                 SizedBox(height: 16),
                                 _CreatePostCard(
                                   userName: user?.fullName ?? 'User',
-                                  imageUrl: user?.imageUrl ?? '',
+                                  imageUrl: user!.imageUrl ,
                                 ),
                                 SizedBox(height: 16),
                               ],
@@ -91,8 +91,10 @@ class HomePage extends StatelessWidget {
                         else
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
-                              (context, index) =>
-                                  PostCard(post: state.currentPosts![index], user: user!,),
+                              (context, index) => PostCard(
+                                post: state.currentPosts![index],
+                                user: user!,
+                              ),
                               childCount: state.currentPosts!.length,
                             ),
                           ),
@@ -112,7 +114,7 @@ class HomePage extends StatelessWidget {
 // ---------------------------------------------------------------------------
 class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const _HomeAppBar(this.imageUrl);
-  final String imageUrl;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,9 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: CircleAvatar(
           radius: 18,
           backgroundColor: Color(0xFFD9D9D9),
-          backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+          backgroundImage: imageUrl != null && imageUrl != ''
+              ? NetworkImage(imageUrl!)
+              : AssetImage('assets/images/profile_defult.jpg') as ImageProvider,
         ),
       ),
       title: Row(
@@ -228,7 +232,7 @@ class _SearchBar extends StatelessWidget {
 // "Create Post" card
 // ---------------------------------------------------------------------------
 class _CreatePostCard extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final String userName;
   const _CreatePostCard({required this.userName, required this.imageUrl});
 
@@ -265,9 +269,9 @@ class _CreatePostCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Color(0xFFD9D9D9),
-                backgroundImage: imageUrl.isNotEmpty
-                    ? NetworkImage(imageUrl)
-                    : null,
+                backgroundImage: imageUrl !=null
+                    ? NetworkImage(imageUrl!)
+                    : AssetImage('assets/images/profile_defult.jpg') as ImageProvider,
               ),
               const SizedBox(width: 10),
               Expanded(

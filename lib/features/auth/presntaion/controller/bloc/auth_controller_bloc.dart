@@ -71,6 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         phone: event.phone,
         fullName: event.fullName,
         createdAt: DateTime.now().toIso8601String(),
+        role: event.role,
       ),
     );
 

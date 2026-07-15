@@ -1,20 +1,23 @@
 import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
+import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
+import 'package:dev_connected/features/main/screens/company_screen.dart';
+import 'package:dev_connected/features/main/screens/developer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({super.key, required this.selectedRole});
+  final UserRole selectedRole;
 
   @override
   Widget build(BuildContext context) {
     TextEditingController fullNameController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
 
     return BlocProvider(
@@ -26,48 +29,44 @@ class RegisterScreen extends StatelessWidget {
               context,
             ).showSnackBar(SnackBar(content: Text(state.registerMessage)));
           } else if (state.registerState == RequestState.loaded) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Account created successfully')),
+            AppTopSnackBar.success(
+              context,
+              message: 'Account created successfully',
             );
+            if (state.currentUser!.role == UserRole.developer) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DeveloperScreen(userEntity: state.currentUser),
+                ),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CompanyScreen(userEntity: state.currentUser),
+                ),
+              );
+            }
           }
         },
         builder: (context, state) {
           return Scaffold(
             backgroundColor: const Color(0xFFF7F8FC),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                'DevConnected',
+                style: TextStyle(color: ColorsManager.primary),
+              ),
+            ),
             body: SafeArea(
               child: Column(
                 children: [
                   // Header: back button + logo
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            // Handle back button press
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: ColorsManager.black,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          'divconnected',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF6C5CE7),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -78,19 +77,21 @@ class RegisterScreen extends StatelessWidget {
                             const SizedBox(height: 8),
 
                             // Title
-                            const Text(
-                              'Create your account',
+                            Text(
+                              'Create ${selectedRole.name} account',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1F1F2E),
+                                color: ColorsManager.black,
                               ),
                             ),
                             const SizedBox(height: 8),
 
                             // Subtitle
-                            const Text(
-                              'Let\'s get you started on your career journey.',
+                            Text(
+                              selectedRole.name == 'Developer'
+                                  ? 'Let\'s get you started on your career journey.'
+                                  : 'Let\'s get you started on your business journey.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
@@ -118,8 +119,10 @@ class RegisterScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Full Name',
+                                  Text(
+                                    selectedRole.name == 'developer'
+                                        ? 'Full Name'
+                                        : 'Company Name',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
@@ -129,13 +132,15 @@ class RegisterScreen extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   AppTextFormFiled(
                                     controller: fullNameController,
-                                    hintText: 'Jane Doe',
+                                    hintText: selectedRole.name == 'developer'
+                                        ? 'Jane Doe'
+                                        : 'Acme Inc.',
                                   ),
 
                                   const SizedBox(height: 20),
 
                                   const Text(
-                                    'Email Address',
+                                    'Email ',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
@@ -145,7 +150,9 @@ class RegisterScreen extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   AppTextFormFiled(
                                     controller: emailController,
-                                    hintText: 'jane@example.com',
+                                    hintText: selectedRole.name == 'developer'
+                                        ? 'jane@example.com'
+                                        : 'contact@acme.com',
                                   ),
                                   const SizedBox(height: 20),
 
@@ -191,93 +198,8 @@ class RegisterScreen extends StatelessWidget {
                                     ),
                                   ),
 
-                                  const SizedBox(height: 16),
-
                                   // Password requirements checklist
-                                  ValueListenableBuilder<TextEditingValue>(
-                                    valueListenable: passwordController,
-                                    builder: (context, value, _) {
-                                      final password = value.text;
-                                      final hasMinLength = password.length >= 8;
-                                      final hasUppercase = password.contains(
-                                        RegExp(r'[A-Z]'),
-                                      );
-                                      final hasLowercase = password.contains(
-                                        RegExp(r'[a-z]'),
-                                      );
-                                      final hasNumberOrSpecial = password
-                                          .contains(
-                                            RegExp(r'[0-9!@#\$&*~%^()_+=-]'),
-                                          );
-
-                                      return Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF6C5CE7,
-                                          ).withValues(alpha: 0.06),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              'Password must contain:',
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                color: ColorsManager.black,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            _PasswordRequirementRow(
-                                              label: 'At least 8 characters',
-                                              isValid: hasMinLength,
-                                            ),
-                                            const SizedBox(height: 6),
-                                            _PasswordRequirementRow(
-                                              label: 'One uppercase letter',
-                                              isValid: hasUppercase,
-                                            ),
-                                            const SizedBox(height: 6),
-                                            _PasswordRequirementRow(
-                                              label: 'One lowercase letter',
-                                              isValid: hasLowercase,
-                                            ),
-                                            const SizedBox(height: 6),
-                                            _PasswordRequirementRow(
-                                              label:
-                                                  'One number or special character',
-                                              isValid: hasNumberOrSpecial,
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-
                                   const SizedBox(height: 20),
-
-                                  const Text(
-                                    'Confirm Password',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: ColorsManager.black,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  AppTextFormFiled(
-                                    isObscureText: true,
-                                    controller: confirmPasswordController,
-                                    hintText: 'Confirm your password',
-                                  ),
-
-                                  const SizedBox(height: 24),
 
                                   // Create Account gradient button
                                   Container(
@@ -314,6 +236,7 @@ class RegisterScreen extends StatelessWidget {
                                               fullName: fullNameController.text,
                                               email: emailController.text,
                                               password: passwordController.text,
+                                              role: selectedRole,
                                             ),
                                           );
                                         },
@@ -391,38 +314,6 @@ class RegisterScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-/// A single row in the password requirements checklist.
-/// Shows a filled purple check icon when [isValid] is true,
-/// or an empty gray circle otherwise.
-class _PasswordRequirementRow extends StatelessWidget {
-  final String label;
-  final bool isValid;
-
-  const _PasswordRequirementRow({required this.label, required this.isValid});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          isValid ? Icons.check_circle : Icons.circle_outlined,
-          size: 16,
-          color: isValid ? const Color(0xFF6C5CE7) : const Color(0xFF9CA3AF),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            color: isValid ? const Color(0xFF6C5CE7) : const Color(0xFF9CA3AF),
-            fontWeight: isValid ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -38,7 +38,6 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
       if (!doc.exists) {
         throw const ServerException('User data not found');
       }
-
       return UserModel.fromMap(doc.data()!);
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
@@ -64,7 +63,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         email: params.email,
         userName: '',
         isEmailVerified: credentials.user!.emailVerified,
-        role: UserRole.developer,
+        role: params.role,
         phone: params.phone,
         createdAt: params.createdAt,
         bio: '',
