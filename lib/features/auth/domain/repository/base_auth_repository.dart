@@ -12,4 +12,5 @@ abstract class BaseAuthRepository {
   Future<void> verifyEmail();
   Future<Either<Failure, UserEntity>> signInWithGoogle();
   Future<Either<Failure, void>> logOut();
+  Future<Either<Failure, UserEntity?>> checkCurrentUser();
 }

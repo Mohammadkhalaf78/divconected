@@ -1,8 +1,8 @@
 import 'package:dev_connected/core/constance/widgets/app_section_filed.dart';
 import 'package:dev_connected/core/constance/widgets/app_text_form_filed.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
-import 'package:dev_connected/features/create_job/domain/entites/enums.dart';
-import 'package:dev_connected/features/create_job/presntation/controller/bloc/create_job_bloc.dart';
+import 'package:dev_connected/features/Jobs/domain/entites/enums.dart';
+import 'package:dev_connected/features/Jobs/presntation/controller/bloc/create_job_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

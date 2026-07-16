@@ -21,7 +21,7 @@ class RegisterScreen extends StatelessWidget {
     TextEditingController phoneController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl()),
+      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.registerState == RequestState.error) {

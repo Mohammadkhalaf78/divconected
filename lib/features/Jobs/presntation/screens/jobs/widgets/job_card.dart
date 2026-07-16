@@ -1,8 +1,10 @@
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
+import 'package:dev_connected/features/Jobs/domain/entites/job_entites.dart';
 import 'package:flutter/material.dart';
 
 class JobCard extends StatelessWidget {
-  const JobCard({super.key});
+  final JobEntity? job;
+  const JobCard({super.key, this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +25,21 @@ class JobCard extends StatelessWidget {
         leading: CircleAvatar(
           radius: 22,
           backgroundImage: NetworkImage(
-            'https://cdn.freebiesupply.com/logos/large/2x/google-icon-logo-png-transparent.png',
+            job?.companyImage != null && job!.companyImage!.isNotEmpty
+                ? job!.companyImage!
+                : 'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-icon-logo-png-transparent-svg-vector-bie-supply-14.png',
           ),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Flutter Developer',
+              job?.title ?? 'Flutter Developer',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 4),
             Text(
-              'Company',
+              job?.companyName ?? 'Company',
               style: TextStyle(fontSize: 14, color: ColorsManager.black),
             ),
 
@@ -48,7 +52,7 @@ class JobCard extends StatelessWidget {
                 ),
                 SizedBox(width: 4),
                 Text(
-                  'Location',
+                  job?.location.name ?? 'Location',
                   style: TextStyle(fontSize: 14, color: ColorsManager.grey),
                 ),
 
@@ -57,13 +61,13 @@ class JobCard extends StatelessWidget {
                 Icon(Icons.work_outlined, size: 14, color: ColorsManager.grey),
                 SizedBox(width: 4),
                 Text(
-                  'Full-time',
+                  job?.jobType.name ?? 'Full-time',
                   style: TextStyle(fontSize: 14, color: ColorsManager.grey),
                 ),
               ],
             ),
             Text(
-              ' \$80,000 - \$100,000',
+              job?.salaryRange ?? ' \$80,000 - \$100,000',
               style: TextStyle(
                 fontSize: 14,
                 color: ColorsManager.accent,

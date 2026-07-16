@@ -14,7 +14,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(),sl(),sl(),sl()),
+      create: (context) => AuthBloc(sl(), sl(),sl(),sl(),sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.forgotPasswordState == RequestState.error) {

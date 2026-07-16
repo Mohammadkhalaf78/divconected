@@ -17,7 +17,7 @@ class LogoutConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl()),
+      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.logoutState == RequestState.loaded) {

@@ -1,4 +1,5 @@
 import 'package:dev_connected/core/enums/enum.dart';
+import 'package:dev_connected/features/auth/domain/use_case/check_user_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/logout_usecase.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
@@ -26,17 +27,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ForgetPasswordUsecase forgetPasswordUsecase;
   final SignInWithGoogleUsecase signInWithGoogleUsecase;
   final LogoutUsecase logoutUsecase;
+  final CheckCurrentUserUsecase checkCurrentUserUsecase;
   AuthBloc(
     this.loginUseCase,
     this.registerUseCase,
     this.forgetPasswordUsecase,
-    this.signInWithGoogleUsecase, this.logoutUsecase,
+    this.signInWithGoogleUsecase,
+    this.logoutUsecase,
+    this.checkCurrentUserUsecase,
   ) : super(const AuthState()) {
     on<LoginRequested>(_login);
     on<RegisterRequested>(_register);
     on<ForgotPasswordRequested>(_forgotPassword);
     on<SignInWithGoogleRequested>(_signInWithGoogle);
     on<LogoutRequested>(_logout);
+    on<CheckCurrentUserRequested>(_checkAuthStatus);
   }
 
   Future<void> _login(LoginRequested event, Emitter<AuthState> emit) async {
@@ -130,11 +135,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
   }
- 
-  Future<void> _logout(
-    LogoutRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+
+  Future<void> _logout(LogoutRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(logoutState: RequestState.loading));
 
     final result = await logoutUsecase();
@@ -147,12 +149,45 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       ),
       (_) => emit(
-        state.copyWith(
-          logoutState: RequestState.loaded,
-          currentUser: null,
-        ),
+        state.copyWith(logoutState: RequestState.loaded, currentUser: null),
       ),
     );
   }
+
+  Future<void> _checkAuthStatus(
+    CheckCurrentUserRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(checkCurrentUserState: RequestState.loading));
+
+    final result = await checkCurrentUserUsecase();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          checkCurrentUserState: RequestState.error,
+          checkCurrentUserMessage: failure.message,
+        ),
+      ),
+      (user) {
+        if (user != null) {
+          emit(
+            state.copyWith(
+              checkCurrentUserState: RequestState.loaded,
+              currentUser: user,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              checkCurrentUserState: RequestState.loaded,
+              currentUser: null,
+            ),
+          );
+        }
+      }
+    );
+  }
+
 
 }

@@ -1,3 +1,4 @@
+import 'package:dev_connected/core/constance/widgets/app_logo.dart';
 import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
@@ -134,32 +135,36 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               : AssetImage('assets/images/profile_defult.jpg') as ImageProvider,
         ),
       ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: ColorsManager.secondary,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.code_rounded,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'Dev Connected',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
+      title:AppLogo(),
+      
+      //  Row(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //     Container(
+      //       padding: const EdgeInsets.all(6),
+      //       decoration: BoxDecoration(
+      //         color: ColorsManager.secondary,
+      //         borderRadius: BorderRadius.circular(8),
+      //       ),
+      //       child: const Icon(
+      //         Icons.code_rounded,
+      //         color: Colors.white,
+      //         size: 18,
+      //       ),
+      //     ),
+      //     const SizedBox(width: 8),
+      //     const Text(
+      //       'Dev Connected',
+      //       style: TextStyle(
+      //         fontSize: 18,
+      //         fontWeight: FontWeight.w700,
+      //         color: Colors.black,
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    
+    
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16),

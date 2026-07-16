@@ -58,3 +58,11 @@ class LogoutRequested extends AuthEvent {
   @override
   List<Object> get props => [];
 }
+
+
+class CheckCurrentUserRequested extends AuthEvent {
+  const CheckCurrentUserRequested();
+
+  @override
+  List<Object> get props => [];
+}

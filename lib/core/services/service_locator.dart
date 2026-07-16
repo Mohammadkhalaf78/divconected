@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dev_connected/core/services/cloudinary_service.dart';
 import 'package:dev_connected/features/auth/auth_injection.dart';
+import 'package:dev_connected/features/Jobs/create_job_injection.dart';
 import 'package:dev_connected/features/home_feed/home_feed_injection.dart';
 import 'package:dev_connected/features/profile/profile_injection.dart';
 import 'package:dio/dio.dart';
@@ -24,5 +25,6 @@ class ServiceLocator {
     initAuthInjection();
     initProfileInjection();
     homeFeedInjection();
+    createJobInjection();
   }
 }

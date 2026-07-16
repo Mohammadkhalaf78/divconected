@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return BlocProvider(
-      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl()),
+      create: (context) => AuthBloc(sl(), sl(), sl(), sl(), sl(),sl()),
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.logInState == RequestState.error) {

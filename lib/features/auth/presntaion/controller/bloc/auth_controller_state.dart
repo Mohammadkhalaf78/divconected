@@ -10,11 +10,14 @@ class AuthState extends Equatable {
     this.signinWithGoogleMessage = '',
     this.registerMessage = '',
     this.logoutMessage = '',
+    this.checkCurrentUserMessage = '',
     this.logInState = RequestState.inital,
     this.registerState = RequestState.inital,
     this.forgotPasswordState = RequestState.inital,
     this.signInWithGoogleState = RequestState.inital,
     this.logoutState = RequestState.inital,
+    this.checkCurrentUserState = RequestState.inital,
+
   });
 
   AuthState copyWith({
@@ -24,11 +27,15 @@ class AuthState extends Equatable {
     String? signinWithGoogleMessage,
     String? registerMessage,
     String? logoutMessage,
+    String? checkCurrentUserMessage,
+
     RequestState? logInState,
     RequestState? registerState,
     RequestState? forgotPasswordState,
     RequestState? signInWithGoogleState,
     RequestState? logoutState,
+    RequestState? checkCurrentUserState,
+
   }) {
     return AuthState(
       currentUser: currentUser ?? this.currentUser,
@@ -43,6 +50,8 @@ class AuthState extends Equatable {
       signInWithGoogleState: signInWithGoogleState ?? this.signInWithGoogleState,
       logoutMessage: logoutMessage ?? this.logoutMessage,
       logoutState: logoutState ?? this.logoutState,
+      checkCurrentUserState: checkCurrentUserState ?? this.checkCurrentUserState,
+      checkCurrentUserMessage: checkCurrentUserMessage ?? this.checkCurrentUserMessage,
     );
   }
 
@@ -54,12 +63,14 @@ class AuthState extends Equatable {
   final String registerMessage;
   final String signinWithGoogleMessage;
   final String logoutMessage ;
+  final String checkCurrentUserMessage ;
   // what state is loading or loadad or error
   final RequestState logInState;
   final RequestState registerState;
   final RequestState forgotPasswordState;
   final RequestState signInWithGoogleState;
   final RequestState logoutState ;
+  final RequestState checkCurrentUserState ;
 
   @override
   List<Object?> get props => [
@@ -74,6 +85,8 @@ class AuthState extends Equatable {
     signInWithGoogleState,
     logoutMessage,
     logoutState,
+    checkCurrentUserState,
+    checkCurrentUserMessage,
   ];
 }
 

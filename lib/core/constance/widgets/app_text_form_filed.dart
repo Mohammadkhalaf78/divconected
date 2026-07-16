@@ -13,6 +13,8 @@ class AppTextFormFiled extends StatelessWidget {
   final Color? backGrgroundColor;
   final Widget? suffixIcons;
   final TextEditingController? controller;
+  final int? minLines;
+  final int? maxLines;
   const AppTextFormFiled({
     super.key,
     this.contentPadding,
@@ -25,13 +27,16 @@ class AppTextFormFiled extends StatelessWidget {
     this.suffixIcons, this.backGrgroundColor,
     this.controller,
     this.onChanged,
+    this.minLines,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onChanged: onChanged,
-      
+      minLines: minLines ?? 1,
+      maxLines: maxLines ?? minLines ?? 1,
       controller: controller,
       decoration: InputDecoration(
         isDense: true,
