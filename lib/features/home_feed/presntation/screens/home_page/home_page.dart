@@ -6,7 +6,7 @@ import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/home_feed/presntation/controller/bloc/home_feed_bloc.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/create_post_page.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/post_card.dart';
-import 'package:dev_connected/features/main/ipload_image/cubit/upload_cubit.dart';
+import 'package:dev_connected/features/main/upload_image/cubit/upload_cubit.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

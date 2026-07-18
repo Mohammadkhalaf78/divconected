@@ -75,9 +75,9 @@ class AuthRepositoryImp implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity?>> checkCurrentUser() async {
+  Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
-      final result = await remoteDataSource.checkCurrentUser();
+      final result = await remoteDataSource.getCurrentUser();
       return Right(result);
     } on ServerException catch (failure) {
       return left(ServerFailure(failure.message));

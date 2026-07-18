@@ -1,0 +1,21 @@
+flutter_native_splash:
+  #======================================================================
+  # select one, they cant work together.
+  color: "#000617"  ##====================================[REQUIRED]==========
+  # allows you to specify an image used in the splash screen. It must be a
+  # png file and should be sized for 4x pixel density.
+  image: assets/splash/splash.png
+  #image_dark:          assets/splash-invert.png
+  # platform-specific image. will override general image if active:
+  # Has no effect in web since web has no notification bar.
+  fullscreen: true                # default false
+  
+  #! ANDROID 12+ configuration:
+  android_12:
+    # background color
+    color: "#000617"
+    image: assets/splash/splash.png    
+    # image_dark: assets/images/logo/logo-splash2.png  
+
+    # center-logo background color
+    icon_background_color: "#111111"

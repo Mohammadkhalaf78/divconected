@@ -49,6 +49,7 @@ dependencies:
   dio: ^5.10.0
   readmore: ^3.0.0
   timeago: ^3.7.1
+  flutter_native_splash: ^2.4.7
   
 
 dev_dependencies:

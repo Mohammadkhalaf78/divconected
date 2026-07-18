@@ -11,7 +11,7 @@ import 'package:dev_connected/features/home_feed/domain/usecases/get_posts_useca
 import 'package:dev_connected/features/home_feed/domain/usecases/toggle_like_usecase.dart';
 import 'package:dev_connected/features/home_feed/presntation/controller/bloc/commment_bloc.dart';
 import 'package:dev_connected/features/home_feed/presntation/controller/bloc/home_feed_bloc.dart';
-import 'package:dev_connected/features/main/ipload_image/cubit/upload_cubit.dart';
+import 'package:dev_connected/features/main/upload_image/cubit/upload_cubit.dart';
 
 void homeFeedInjection() {
   // Bloc

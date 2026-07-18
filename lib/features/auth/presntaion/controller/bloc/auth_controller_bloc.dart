@@ -1,5 +1,5 @@
 import 'package:dev_connected/core/enums/enum.dart';
-import 'package:dev_connected/features/auth/domain/use_case/check_user_usecase.dart';
+import 'package:dev_connected/features/auth/domain/use_case/get_user_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/logout_usecase.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
 import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
@@ -27,7 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ForgetPasswordUsecase forgetPasswordUsecase;
   final SignInWithGoogleUsecase signInWithGoogleUsecase;
   final LogoutUsecase logoutUsecase;
-  final CheckCurrentUserUsecase checkCurrentUserUsecase;
+  final GetCurrentUserUsecase checkCurrentUserUsecase;
   AuthBloc(
     this.loginUseCase,
     this.registerUseCase,
@@ -170,24 +170,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       ),
       (user) {
-        if (user != null) {
-          emit(
-            state.copyWith(
-              checkCurrentUserState: RequestState.loaded,
-              currentUser: user,
-            ),
-          );
-        } else {
-          emit(
-            state.copyWith(
-              checkCurrentUserState: RequestState.loaded,
-              currentUser: null,
-            ),
-          );
-        }
-      }
+        emit(
+          state.copyWith(
+            checkCurrentUserState: RequestState.loaded,
+            currentUser: user,
+          ),
+        );
+      },
     );
   }
-
-
 }

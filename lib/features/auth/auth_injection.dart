@@ -2,7 +2,7 @@ import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:dev_connected/features/auth/data/repository/auth_repository_imp.dart';
 import 'package:dev_connected/features/auth/domain/repository/base_auth_repository.dart';
-import 'package:dev_connected/features/auth/domain/use_case/check_user_usecase.dart';
+import 'package:dev_connected/features/auth/domain/use_case/get_user_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/forget_password_usecase.dart';
 import 'package:dev_connected/features/auth/domain/use_case/login_use_case.dart';
 import 'package:dev_connected/features/auth/domain/use_case/logout_usecase.dart';
@@ -29,7 +29,7 @@ void initAuthInjection() {
   sl.registerLazySingleton(() => ForgetPasswordUsecase(sl()));
   sl.registerLazySingleton(() => SignInWithGoogleUsecase(sl()));
   sl.registerLazySingleton(() => LogoutUsecase(sl()));
-  sl.registerLazySingleton(() => CheckCurrentUserUsecase(sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUsecase(sl()));
 
   // Repository
   sl.registerLazySingleton<BaseAuthRepository>(

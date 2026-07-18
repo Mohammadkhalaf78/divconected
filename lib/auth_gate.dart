@@ -1,4 +1,5 @@
 import 'package:dev_connected/core/constance/widgets/app_logo.dart';
+import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
 import 'package:dev_connected/features/auth/presntaion/controller/bloc/auth_controller_bloc.dart';
@@ -20,6 +21,11 @@ class AuthGate extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.checkCurrentUserState == RequestState.loaded) {
+            AppTopSnackBar.success(
+              context,
+              message:
+                  "Welcome back, ${state.currentUser?.fullName ?? 'User'}!",
+            );
             if (state.currentUser != null) {
               // User is logged in, navigate to the home screen
               if (state.currentUser!.role == UserRole.company) {
@@ -41,6 +47,10 @@ class AuthGate extends StatelessWidget {
                 );
               }
             } else {
+              AppTopSnackBar.error(
+                context,
+                message: "User not found. Please log in.",
+              );
               // User is not logged in, navigate to the login screen
               Navigator.pushReplacement(
                 context,

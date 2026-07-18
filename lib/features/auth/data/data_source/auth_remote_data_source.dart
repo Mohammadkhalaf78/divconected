@@ -14,7 +14,7 @@ abstract class BaseAuthRemoteDataSource {
   Future<void> forgotPassword(ForgotPasswordParams params);
   Future<UserModel> signInWithGoogle();
   Future<void> logOut();
-  Future<UserModel?> checkCurrentUser();
+  Future<UserModel> getCurrentUser();
 }
 
 class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
@@ -161,7 +161,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel?> checkCurrentUser() async {
+  Future<UserModel> getCurrentUser() async {
     try {
       final user = firebaseAuth.currentUser;
       if (user == null) {
@@ -179,7 +179,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
       }
 
       return UserModel.fromMap(snapshot.data()!);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
   }

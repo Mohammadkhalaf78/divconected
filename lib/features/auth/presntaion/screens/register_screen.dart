@@ -101,6 +101,11 @@ class RegisterScreen extends StatelessWidget {
 
                             const SizedBox(height: 24),
 
+                            
+
+                            
+                            const SizedBox(height: 24),
+
                             // White card
                             Container(
                               width: double.infinity,
