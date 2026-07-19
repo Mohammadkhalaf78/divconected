@@ -2,7 +2,7 @@ import 'package:dev_connected/core/constance/widgets/app_button_filed.dart';
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/login_screen.dart';
-import 'package:dev_connected/features/auth/presntaion/screens/register_screen.dart';
+import 'package:dev_connected/features/auth/presntaion/screens/register/register_screen.dart';
 import 'package:dev_connected/core/constance/widgets/app_logo.dart';
 import 'package:dev_connected/features/auth/presntaion/screens/role/role_card.dart';
 import 'package:flutter/material.dart';

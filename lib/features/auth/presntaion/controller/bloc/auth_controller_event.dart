@@ -23,17 +23,18 @@ class RegisterRequested extends AuthEvent {
   final String phone;
   final String fullName;
   final UserRole role;
-
+  final String imageUrl;
   const RegisterRequested({
     required this.email,
     required this.password,
     required this.phone,
     required this.fullName,
     required this.role,
+    required this.imageUrl,
   });
 
   @override
-  List<Object> get props => [email, password, phone, fullName, role];
+  List<Object> get props => [email, password, phone, fullName, role, imageUrl];
 }
 
 class ForgotPasswordRequested extends AuthEvent {

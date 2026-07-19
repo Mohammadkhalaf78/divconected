@@ -1,4 +1,3 @@
-import 'package:dev_connected/core/constance/widgets/app_logo.dart';
 import 'package:dev_connected/core/constance/widgets/app_top_snackbar.dart';
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/core/services/service_locator.dart';
@@ -54,13 +53,20 @@ class AuthGate extends StatelessWidget {
               // User is not logged in, navigate to the login screen
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const CircularProgressIndicator(),
+                ),
               );
             }
+          } else if (state.checkCurrentUserState == RequestState.error) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
           }
         },
 
-        child: const Scaffold(body: Center(child: AppLogo())),
+        child: const Scaffold(body: Center(child: CircularProgressIndicator())),
       ),
     );
   }

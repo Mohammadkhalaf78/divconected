@@ -34,23 +34,19 @@ class EditProfileScreen extends StatelessWidget {
     TextEditingController phoneController = TextEditingController(
       text: userProfile.phone ?? '+20 101 234 5678',
     );
-    TextEditingController bioController = TextEditingController(
-      text: 'Flutter Developer passionate about building amazing mobile apps.',
-    );
+    TextEditingController bioController = TextEditingController(text:userProfile.bio ?? ' ');
 
     return BlocProvider(
       create: (context) => ProfileBloc(sl(), sl(), sl()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.updateProfileState == RequestState.loaded) {
-            AppTopSnackBar.success(context, message: 'Profile updated successfully');
-            // Navigator.pop(context); // Close the success screen
-            Navigator.pushReplacement(
+            AppTopSnackBar.success(
               context,
-              MaterialPageRoute(
-                builder: (context) => DeveloperScreen(userEntity: userProfile),
-              ),
+              message: 'Profile updated successfully',
             );
+            // Navigator.pop(context); // Close the success screen
+            Navigator.pop(context); // Close the success screen
           } else if (state.updateProfileState == RequestState.error) {
             ScaffoldMessenger.of(
               context,
@@ -90,6 +86,13 @@ class EditProfileScreen extends StatelessWidget {
                   Center(
                     child: Column(
                       children: [
+
+                        userProfile.imageUrl != null
+                            ? CircleAvatar(
+                                radius: 45,
+                                backgroundImage: NetworkImage(userProfile.imageUrl!),
+                              )
+                            :
                         CircleAvatar(
                           radius: 45,
                           backgroundColor: kPrimaryPurple.withValues(

@@ -14,7 +14,7 @@ class UploadCubit extends Cubit<UploadState> {
 
   UploadCubit(this.cloudinaryService) : super(UploadInitial());
 
-  Future<void> pickImage() async {
+  Future<void> pickImage( ) async {
     final pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 80,

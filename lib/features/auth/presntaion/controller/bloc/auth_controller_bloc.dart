@@ -77,6 +77,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         fullName: event.fullName,
         createdAt: DateTime.now().toIso8601String(),
         role: event.role,
+        imageUrl: event.imageUrl,
       ),
     );
 
@@ -163,12 +164,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await checkCurrentUserUsecase();
 
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          checkCurrentUserState: RequestState.error,
-          checkCurrentUserMessage: failure.message,
-        ),
-      ),
+      (failure) {
+
+
+        emit(
+          state.copyWith(
+            checkCurrentUserState: RequestState.error,
+            checkCurrentUserMessage: failure.message,
+          ),
+        );
+      },
       (user) {
         emit(
           state.copyWith(

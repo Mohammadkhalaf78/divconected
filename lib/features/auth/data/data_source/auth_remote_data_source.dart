@@ -68,7 +68,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         phone: params.phone,
         createdAt: params.createdAt,
         bio: '',
-        imageUrl: '',
+        imageUrl: params.imageUrl,
       );
 
       await FirebaseFirestore.instance
@@ -164,6 +164,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
   Future<UserModel> getCurrentUser() async {
     try {
       final user = firebaseAuth.currentUser;
+
       if (user == null) {
         throw const ServerException('User not found');
       }
