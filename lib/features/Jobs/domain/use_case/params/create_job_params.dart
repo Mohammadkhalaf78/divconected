@@ -9,6 +9,7 @@ class CreateJobParams {
   final String requirements;
   final String companyName;
   final String companyImage;
+  final String companyId;
 
   CreateJobParams({
     required this.title,
@@ -19,5 +20,7 @@ class CreateJobParams {
     required this.requirements,
     required this.companyName,
     required this.companyImage,
+    required this.companyId,
+    
   });
 }

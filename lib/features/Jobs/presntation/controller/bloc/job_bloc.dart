@@ -1,24 +1,31 @@
 import 'package:dev_connected/core/enums/enum.dart';
 import 'package:dev_connected/features/Jobs/domain/entites/enums.dart';
 import 'package:dev_connected/features/Jobs/domain/entites/job_entites.dart';
+import 'package:dev_connected/features/Jobs/domain/use_case/apply_job_usecase.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/create_job_usecase.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/get_jobs_usecase.dart';
+import 'package:dev_connected/features/Jobs/domain/use_case/params/apply_job_param.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/params/create_job_params.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'create_job_event.dart';
-part 'create_job_state.dart';
+part 'job_event.dart';
+part 'job_state.dart';
 
-class CreateJobBloc extends Bloc<CreateJobEvent, JobsState> {
+class JobBloc extends Bloc<JobEvent, JobsState> {
   final CreateJobUseCase createJobUseCase;
   final GetJobsUsecase getJobsUsecase;
-  CreateJobBloc(this.createJobUseCase, this.getJobsUsecase)
-    : super(CreateJobInitial()) {
+  final ApplyJobUseCase applyJobUseCase;
+  JobBloc(
+    this.createJobUseCase,
+    this.getJobsUsecase,
+    this.applyJobUseCase,
+  ) : super(CreateJobInitial()) {
     on<JobTypeChanged>(_onJobTypeChanged);
     on<LocationChanged>(_onLocationChanged);
     on<CreateJobSubmitted>(_onCreateJob);
     on<GetJobRequested>(_onGetJobs);
+    on<ApplyJobRequested>(_onApplyJob);
   }
 
   void _onJobTypeChanged(JobTypeChanged event, Emitter<JobsState> emit) {
@@ -44,6 +51,7 @@ class CreateJobBloc extends Bloc<CreateJobEvent, JobsState> {
         requirements: event.requirements,
         companyName: event.companyName,
         companyImage: event.companyImage,
+        companyId: event.companyId,
       ),
     );
     result.fold(
@@ -81,6 +89,34 @@ class CreateJobBloc extends Bloc<CreateJobEvent, JobsState> {
           getJobsState: RequestState.loaded,
           jobs: jobs,
           getJobsMessage: 'Jobs fetched successfully',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onApplyJob(
+    ApplyJobRequested event,
+    Emitter<JobsState> emit,
+  ) async {
+    emit(state.copyWith(applyJobState: RequestState.loading));
+    final result = await applyJobUseCase(
+      ApplyJobParams(
+        jobId: event.jobId,
+        userId: event.userId,
+        companyId: event.companyId,
+      ),
+    );
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          applyJobState: RequestState.error,
+          applyJobMessage: failure.message,
+        ),
+      ),
+      (success) => emit(
+        state.copyWith(
+          applyJobState: RequestState.loaded,
+          applyJobMessage: 'Applied to job successfully',
         ),
       ),
     );

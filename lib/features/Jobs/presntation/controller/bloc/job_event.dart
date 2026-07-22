@@ -1,18 +1,13 @@
-part of 'create_job_bloc.dart';
+part of 'job_bloc.dart';
 
-sealed class CreateJobEvent extends Equatable {
-  const CreateJobEvent();
+sealed class JobEvent extends Equatable {
+  const JobEvent();
 
   @override
-  List<Object> get props => [
-
-  ];
+  List<Object> get props => [];
 }
 
-
-
-
-class JobTypeChanged extends CreateJobEvent {
+class JobTypeChanged extends JobEvent {
   final JobType jobType;
 
   const JobTypeChanged(this.jobType);
@@ -21,7 +16,7 @@ class JobTypeChanged extends CreateJobEvent {
   List<Object> get props => [jobType];
 }
 
-class LocationChanged extends CreateJobEvent {
+class LocationChanged extends JobEvent {
   final Location location;
 
   const LocationChanged(this.location);
@@ -30,8 +25,7 @@ class LocationChanged extends CreateJobEvent {
   List<Object> get props => [location];
 }
 
-
-class CreateJobSubmitted extends CreateJobEvent {
+class CreateJobSubmitted extends JobEvent {
   final String jobTitle;
   final JobType jobType;
   final Location location;
@@ -40,6 +34,7 @@ class CreateJobSubmitted extends CreateJobEvent {
   final String requirements;
   final String companyName;
   final String companyImage;
+  final String companyId;
 
   const CreateJobSubmitted({
     required this.jobTitle,
@@ -50,24 +45,42 @@ class CreateJobSubmitted extends CreateJobEvent {
     required this.requirements,
     required this.companyName,
     required this.companyImage,
+    required this.companyId,
+
   });
 
   @override
   List<Object> get props => [
-        jobTitle,
-        jobType,
-        location,
-        salaryRange,
-        description,
-        requirements,
-        companyName,
-        companyImage,
-      ];
+    jobTitle,
+    jobType,
+    location,
+    salaryRange,
+    description,
+    requirements,
+    companyName,
+    companyImage,
+    companyId
+  ];
 }
-  
-class GetJobRequested extends CreateJobEvent {
+
+class GetJobRequested extends JobEvent {
   const GetJobRequested();
 
   @override
   List<Object> get props => [];
+}
+
+class ApplyJobRequested extends JobEvent {
+  final String jobId;
+  final String userId;
+  final String companyId;
+
+  const ApplyJobRequested({
+    required this.jobId,
+    required this.userId,
+    required this.companyId,
+  });
+
+  @override
+  List<Object> get props => [jobId, userId, companyId];
 }

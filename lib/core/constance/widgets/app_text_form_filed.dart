@@ -15,6 +15,7 @@ class AppTextFormFiled extends StatelessWidget {
   final TextEditingController? controller;
   final int? minLines;
   final int? maxLines;
+  final String? Function(String?)? validator;
   const AppTextFormFiled({
     super.key,
     this.contentPadding,
@@ -22,6 +23,7 @@ class AppTextFormFiled extends StatelessWidget {
     this.enabledBorder,
     this.inputTextStyle,
     this.hintStyle,
+    this.validator,
     required this.hintText,
     this.isObscureText,
     this.suffixIcons, this.backGrgroundColor,
@@ -34,6 +36,7 @@ class AppTextFormFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: validator,
       onChanged: onChanged,
       minLines: minLines ?? 1,
       maxLines: maxLines ?? minLines ?? 1,

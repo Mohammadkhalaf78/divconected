@@ -5,6 +5,7 @@ import 'package:dev_connected/features/Jobs/domain/entites/job_entites.dart';
 class JobModel extends JobEntity {
   const JobModel({
      super.id,
+    super.companyId,
     required super.title,
     required super.jobType,
     required super.location,
@@ -15,7 +16,7 @@ class JobModel extends JobEntity {
     super.companyName,
     super.createdAt,
     super.companyImage,
-  });
+  }) : super();
 
   factory JobModel.fromJson(Map<String, dynamic> json) {
     return JobModel(
@@ -32,6 +33,7 @@ class JobModel extends JobEntity {
       requirements: json['requirements'] ?? '',
       companyName: json['companyName'] ?? '',
       companyImage: json['companyImage'] ?? '',
+      companyId: json['companyId'] ?? '',
       createdAt: (json['createdAt'] as Timestamp?)?.toDate(),
     );
   }
@@ -48,6 +50,7 @@ class JobModel extends JobEntity {
       'companyName': companyName,
       'companyImage': companyImage,
       'createdAt': FieldValue.serverTimestamp(),
+      'companyId': companyId,
     };
   }
 }

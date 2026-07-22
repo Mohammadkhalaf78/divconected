@@ -39,7 +39,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
       if (!doc.exists) {
         throw const ServerException('User data not found');
       }
-      return UserModel.fromMap(doc.data()!);
+      return UserModel.fromMap({...doc.data()!, 'id': doc.id});
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
@@ -145,7 +145,9 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         }, SetOptions(merge: true));
       }
 
-      return UserModel.fromMap((await userDoc.get()).data()!);
+      final doc = await userDoc.get();
+
+      return UserModel.fromMap({...doc.data()!, 'id': doc.id});
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }
@@ -179,7 +181,7 @@ class FirebaseRemoteDataSourceImp implements BaseAuthRemoteDataSource {
         throw const ServerException('User not found');
       }
 
-      return UserModel.fromMap(snapshot.data()!);
+      return UserModel.fromMap({...snapshot.data()!, 'id': snapshot.id});
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'An error occurred');
     }

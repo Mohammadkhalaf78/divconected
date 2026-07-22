@@ -1,4 +1,4 @@
-part of 'create_job_bloc.dart';
+part of 'job_bloc.dart';
 
 class JobsState extends Equatable {
   const JobsState({
@@ -6,8 +6,10 @@ class JobsState extends Equatable {
     this.jobs,
     this.createJobMessage = '',
     this.getJobsMessage = '',
+    this.applyJobMessage = '',
     this.createJobState = RequestState.inital,
     this.getJobsState = RequestState.inital,
+    this.applyJobState = RequestState.inital,
     //////////////////////////////
     this.title = '',
     this.salary = '',
@@ -26,9 +28,11 @@ class JobsState extends Equatable {
   // if there any message error
   final String createJobMessage;
   final String getJobsMessage;
+  final String applyJobMessage;
   // what state is loading or loadad or error
   final RequestState createJobState;
   final RequestState getJobsState;
+  final RequestState applyJobState;
   ////////////////////////////////
   final String title;
   final JobType jobtype;
@@ -45,8 +49,11 @@ class JobsState extends Equatable {
     List<JobEntity>? jobs,
     String? createJobMessage,
     String? getJobsMessage,
+    String? applyJobMessage,
     RequestState? createJobState,
     RequestState? getJobsState,
+    RequestState? applyJobState,
+    
     ////////////////////////////////
     String? title,
     String? salary,
@@ -65,6 +72,8 @@ class JobsState extends Equatable {
       getJobsState: getJobsState ?? this.getJobsState,
       createJobMessage: createJobMessage ?? this.createJobMessage,
       createJobState: createJobState ?? this.createJobState,
+      applyJobMessage: applyJobMessage ?? this.applyJobMessage,
+      applyJobState: applyJobState ?? this.applyJobState,
       ////////////////////////////////
       title: title ?? this.title,
       salary: salary ?? this.salary,
@@ -87,6 +96,8 @@ class JobsState extends Equatable {
     createJobState,
     getJobsMessage,
     getJobsState,
+    applyJobMessage,
+    applyJobState,
     ////////////////////////////////
     title,
     salary,

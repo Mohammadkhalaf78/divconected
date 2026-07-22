@@ -1,7 +1,7 @@
 import 'package:dev_connected/core/constance/widgets/colors_manager.dart';
 import 'package:dev_connected/features/home_feed/presntation/screens/home_page/home_page.dart';
-import 'package:dev_connected/features/Jobs/presntation/screens/create_job_screen.dart';
-import 'package:dev_connected/features/Jobs/presntation/screens/jobs/job_screen.dart';
+import 'package:dev_connected/features/Jobs/presntation/screens/create_job/create_job_screen.dart';
+import 'package:dev_connected/features/Jobs/presntation/screens/jobs_page/job_screen.dart';
 import 'package:dev_connected/features/main/cubit/navigation_cubit.dart';
 import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
@@ -15,7 +15,7 @@ class CompanyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final pages = [
       HomePage(user: userEntity),
-      JobScreen(),
+      JobScreen(user: userEntity),
       CreateJobScreen(user: userEntity),
       ProfileViewScreen(),
     ];

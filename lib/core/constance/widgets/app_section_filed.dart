@@ -8,6 +8,7 @@ class AppSelectedForm<T> extends StatelessWidget {
     required this.items,
     required this.itemLabel,
     required this.onSelected,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -15,10 +16,12 @@ class AppSelectedForm<T> extends StatelessWidget {
   final List<T> items;
   final String Function(T item) itemLabel;
   final void Function(T selected) onSelected;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: validator,
       readOnly: true,
       decoration: InputDecoration(
         labelText: labelText,

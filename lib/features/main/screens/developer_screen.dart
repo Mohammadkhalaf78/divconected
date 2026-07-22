@@ -1,5 +1,5 @@
 import 'package:dev_connected/features/home_feed/presntation/screens/home_page/home_page.dart';
-import 'package:dev_connected/features/Jobs/presntation/screens/jobs/job_screen.dart';
+import 'package:dev_connected/features/Jobs/presntation/screens/jobs_page/job_screen.dart';
 import 'package:dev_connected/features/main/cubit/navigation_cubit.dart';
 import 'package:dev_connected/features/profile/presntation/screens/profile_screen/profile_view_screen.dart';
 import 'package:dev_connected/sherad/entites/user_entity.dart';
@@ -11,7 +11,11 @@ class DeveloperScreen extends StatelessWidget {
   final UserEntity? userEntity;
   @override
   Widget build(BuildContext context) {
-    final pages = [HomePage(user: userEntity),  JobScreen(),ProfileViewScreen()];
+    final pages = [
+      HomePage(user: userEntity),
+      JobScreen(user: userEntity),
+      ProfileViewScreen(),
+    ];
 
     return BlocProvider(
       create: (context) => NavigationCubit(),

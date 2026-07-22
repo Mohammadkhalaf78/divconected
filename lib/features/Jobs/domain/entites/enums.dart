@@ -38,3 +38,9 @@ enum Location {
   luxor,
   asyut,
 }
+enum ApplicationStatus {
+  pending,
+  reviewing,
+  accepted,
+  rejected,
+}

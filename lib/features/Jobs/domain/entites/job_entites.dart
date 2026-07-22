@@ -4,6 +4,8 @@ import 'package:equatable/equatable.dart';
 class JobEntity extends Equatable {
   const JobEntity({
      this.id,
+     this.companyId,
+
     required this.title,
     required this.jobType,
     required this.location,
@@ -19,6 +21,7 @@ class JobEntity extends Equatable {
 
   final String title;
   final String? id;
+  final String? companyId;
   final JobType jobType;
   final Location location;
   final String salaryRange;
@@ -38,6 +41,6 @@ class JobEntity extends Equatable {
     requirements,
     createdAt,
     companyName,
-    companyImage,
+    companyImage,companyId
   ];
 }

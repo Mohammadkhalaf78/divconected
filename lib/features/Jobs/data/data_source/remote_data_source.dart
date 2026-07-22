@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dev_connected/core/network/exceptions.dart';
+import 'package:dev_connected/features/Jobs/data/model/applaction_model.dart';
 import 'package:dev_connected/features/Jobs/data/model/job_model.dart';
+import 'package:dev_connected/features/Jobs/domain/entites/enums.dart';
+import 'package:dev_connected/features/Jobs/domain/use_case/params/apply_job_param.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/params/create_job_params.dart';
 
-abstract class BaseRemoteDataSource {
+abstract class BaseJobRemoteDataSource {
   Future<JobModel> createJob(CreateJobParams params);
   Future<List<JobModel>> getJobs();
+  Future<ApllcationModel> applyJob(ApplyJobParams params);
 }
 
-class RemoteDataSourceImp implements BaseRemoteDataSource {
+class RemoteDataSourceImp implements BaseJobRemoteDataSource {
   final FirebaseFirestore firestore;
 
   RemoteDataSourceImp(this.firestore);
@@ -27,6 +31,7 @@ class RemoteDataSourceImp implements BaseRemoteDataSource {
         requirements: params.requirements,
         companyName: params.companyName,
         companyImage: params.companyImage,
+        companyId: params.companyId
       );
 
       await doc.set(job.toJson());
@@ -42,13 +47,39 @@ class RemoteDataSourceImp implements BaseRemoteDataSource {
   @override
   Future<List<JobModel>> getJobs() async {
     try {
-      final querySnapshot = await firestore.collection('jobs').get();
+      final querySnapshot = await firestore
+          .collection('jobs')
+          .orderBy('title')
+          .get();
       return querySnapshot.docs
           .map((doc) => JobModel.fromJson(doc.data()))
           .toList();
     } on FirebaseException catch (e) {
       throw ServerException(
         e.message ?? 'An error occurred while fetching jobs.',
+      );
+    }
+  }
+
+  @override
+  Future<ApllcationModel> applyJob(ApplyJobParams params) async {
+    //create doc for he will creat new id
+    try {
+      final doc = firestore.collection('applications').doc();
+      final application = ApllcationModel(
+        id: doc.id,
+        jobId: params.jobId,
+        userId: params.userId,
+        companyId: params.companyId,
+        status: ApplicationStatus.pending,
+        applicationAt: DateTime.now(),
+      );
+
+      await doc.set(application.toJson());
+      return application;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        e.message ?? 'An error occurred while applying for the job.',
       );
     }
   }

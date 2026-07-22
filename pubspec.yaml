@@ -50,7 +50,7 @@ dependencies:
   readmore: ^3.0.0
   timeago: ^3.7.1
   flutter_native_splash: ^2.4.7
-  
+  flutter_screenutil: ^5.9.0
 
 dev_dependencies:
   flutter_test:

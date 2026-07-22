@@ -13,7 +13,6 @@ class ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<UploadCubit, UploadState>(
       listener: (context, state) {
-        // TODO: implement listener
       },
       builder: (context, state) {
         final cubit = context.read<UploadCubit>();
