@@ -5,17 +5,20 @@ import 'package:dev_connected/features/Jobs/data/model/job_model.dart';
 import 'package:dev_connected/features/Jobs/domain/entites/enums.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/params/apply_job_param.dart';
 import 'package:dev_connected/features/Jobs/domain/use_case/params/create_job_params.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class BaseJobRemoteDataSource {
   Future<JobModel> createJob(CreateJobParams params);
   Future<List<JobModel>> getJobs();
   Future<ApllcationModel> applyJob(ApplyJobParams params);
+  Future<List<ApllcationModel>> getAppliedJobs();
 }
 
 class RemoteDataSourceImp implements BaseJobRemoteDataSource {
   final FirebaseFirestore firestore;
+  final FirebaseAuth firebaseAuth;
 
-  RemoteDataSourceImp(this.firestore);
+  RemoteDataSourceImp(this.firestore, this.firebaseAuth);
   @override
   Future<JobModel> createJob(CreateJobParams params) async {
     try {
@@ -31,7 +34,7 @@ class RemoteDataSourceImp implements BaseJobRemoteDataSource {
         requirements: params.requirements,
         companyName: params.companyName,
         companyImage: params.companyImage,
-        companyId: params.companyId
+        companyId: params.companyId,
       );
 
       await doc.set(job.toJson());
@@ -73,6 +76,9 @@ class RemoteDataSourceImp implements BaseJobRemoteDataSource {
         companyId: params.companyId,
         status: ApplicationStatus.pending,
         applicationAt: DateTime.now(),
+        companyImage: params.companyImage,
+        companyName: params.companyName,
+        jobTitle: params.jobTitle,
       );
 
       await doc.set(application.toJson());
@@ -80,6 +86,28 @@ class RemoteDataSourceImp implements BaseJobRemoteDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(
         e.message ?? 'An error occurred while applying for the job.',
+      );
+    }
+  }
+
+  @override
+  Future<List<ApllcationModel>> getAppliedJobs() async {
+    try {
+      final userId = firebaseAuth.currentUser?.uid;
+      if (userId == null) {
+        throw ServerException('User not authenticated');
+      }
+      final querySnapshot = await firestore
+          .collection('applications')
+          .where('userId', isEqualTo: userId)
+          .orderBy('applicationAt', descending: true)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => ApllcationModel.fromJson({...doc.data(), 'id': doc.id}))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        e.message ?? 'An error occurred while fetching applied jobs.',
       );
     }
   }

@@ -28,8 +28,8 @@ class CreateJobScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => JobBloc(sl(), sl(), sl()),
-      child: BlocConsumer<JobBloc, JobsState>(
+      create: (context) => JobBloc(sl(), sl(), sl(),sl()),
+      child: BlocConsumer<JobBloc, JobState>(
         listener: (context, state) {
           if (state.createJobState == RequestState.loaded) {
             AppTopSnackBar.success(

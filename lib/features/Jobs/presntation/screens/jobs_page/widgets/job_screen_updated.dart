@@ -9,14 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobScreen extends StatelessWidget {
-  const JobScreen({super.key,required this.user});
+  const JobScreen({super.key, required this.user});
   final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => JobBloc(sl(), sl(), sl())..add(GetJobRequested()),
-      child: BlocConsumer<JobBloc, JobsState>(
+      create: (context) =>
+          JobBloc(sl(), sl(), sl(), sl())..add(GetJobRequested()),
+      child: BlocConsumer<JobBloc, JobState>(
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
@@ -49,8 +50,10 @@ class JobScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      JobDatailsScreen(job: job,currentUser: user,),
+                                  builder: (context) => JobDatailsScreen(
+                                    job: job,
+                                    currentUser: user,
+                                  ),
                                 ),
                               );
                             },

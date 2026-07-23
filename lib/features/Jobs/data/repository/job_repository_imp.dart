@@ -43,4 +43,14 @@ class JobRepositoryImpl implements BaseJobRepository {
       return Left(ServerFailure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ApplicationEntity>>> getAppliedJobs() async {
+    try {
+      final result = await remoteDataSource.getAppliedJobs();
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
 }

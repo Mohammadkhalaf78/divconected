@@ -6,6 +6,9 @@ abstract class ApplicationEntity extends Equatable {
   final String jobId;
   final String userId;
   final String companyId;
+  final String companyImage;
+  final String companyName;
+  final String jobTitle;
   final ApplicationStatus status;
   final DateTime applicationAt;
 
@@ -14,10 +17,23 @@ abstract class ApplicationEntity extends Equatable {
     required this.jobId,
     required this.userId,
     required this.companyId,
+    required this.companyImage,
+    required this.companyName,
+    required this.jobTitle,
     required this.status,
     required this.applicationAt,
   });
 
   @override
-  List<Object?> get props => [id,jobId, userId, companyId, status, applicationAt];
+  List<Object?> get props => [
+    id,
+    jobId,
+    userId,
+    companyId,
+    companyImage,
+    companyName,
+    jobTitle,
+    status,
+    applicationAt,
+  ];
 }

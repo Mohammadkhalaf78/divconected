@@ -4,6 +4,9 @@ import 'package:dev_connected/features/Jobs/domain/entites/enums.dart';
 
 class ApllcationModel extends ApplicationEntity {
   const ApllcationModel({
+    required super.companyImage,
+    required super.companyName,
+    required super.jobTitle,
     required super.id,
     required super.jobId,
     required super.userId,
@@ -14,6 +17,9 @@ class ApllcationModel extends ApplicationEntity {
 
   factory ApllcationModel.fromJson(Map<String, dynamic> json) {
     return ApllcationModel(
+      companyImage: json['companyImage'],
+      companyName: json['companyName'],
+      jobTitle: json['jobTitle'],
       id: json['id'],
       jobId: json['jobId'],
       userId: json['userId'],
@@ -21,7 +27,7 @@ class ApllcationModel extends ApplicationEntity {
       status: ApplicationStatus.values.firstWhere(
         (e) => e.toString() == 'ApplicationStatus.${json['status']}',
       ),
-      applicationAt: DateTime.parse(json['applicationAt']),
+      applicationAt: (json['applicationAt'] as Timestamp).toDate(),
     );
   }
 
@@ -33,6 +39,9 @@ class ApllcationModel extends ApplicationEntity {
       'companyId': companyId,
       'status': status.name,
       'applicationAt': Timestamp.fromDate(applicationAt),
+      'companyImage': companyImage,
+      'companyName': companyName,
+      'jobTitle': jobTitle,
     };
   }
 }

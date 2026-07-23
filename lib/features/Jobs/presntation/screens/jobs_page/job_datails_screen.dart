@@ -27,7 +27,7 @@ class JobDatailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<JobBloc, JobsState>(
+    return BlocListener<JobBloc, JobState>(
       listener: (context, state) {
         if (state.applyJobState == RequestState.loaded) {
           AppTopSnackBar.success(
@@ -82,6 +82,9 @@ class JobDatailsScreen extends StatelessWidget {
                         jobId: job.id ?? '',
                         userId: currentUser.id, //
                         companyId: job.companyId ?? '',
+                        companyImage: job.companyImage ?? '',
+                        companyName: job.companyName ?? '',
+                        jobTitle: job.title,
                       ),
                     );
                   },

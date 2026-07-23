@@ -9,5 +9,6 @@ abstract class BaseJobRepository {
   Future<Either<Failure, JobEntity>> createJob(CreateJobParams params);
   Future<Either<Failure, List<JobEntity>>> getJobs();
   Future<Either<Failure, ApplicationEntity>> applyForJob(ApplyJobParams params);
+  Future<Either<Failure, List<ApplicationEntity>>> getAppliedJobs();
 
 }
